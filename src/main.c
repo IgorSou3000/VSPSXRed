@@ -37,7 +37,7 @@ void ErrorLock(void)
 }
 
 //Memory heap
-//#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
+#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
 
 #define MEM_IMPLEMENTATION
 #include "mem.h"
@@ -54,7 +54,6 @@ int main(int argc, char **argv)
 	my_argc = argc;
 	my_argv = argv;
 
-	stage.mode = StageMode_Swap;
 	
 	//Initialize system
 	PSX_Init();

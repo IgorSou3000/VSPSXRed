@@ -23,7 +23,6 @@
 #include "object/splash.h"
 
 int bfnotex = 0;
-int opponentnotex = 0;
 
 
 //Stage constants
@@ -364,10 +363,10 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			//Hit the mine
 			note->type |= NOTE_FLAG_HIT;
 			
-				this->health = -0x3000;
+				this->health -= 3500;
 
 			if (this->character->spec & CHAR_SPEC_MISSANIM)
-				this->character->set_anim(this->character, note_anims[type & 0x3][2]);
+				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 			else
 				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 			this->arrow_hitan[type & 0x3] = -1;
@@ -413,7 +412,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 		Stage_MissNote(this);
 		
-		this->health -= 400;
+		this->health -= 500;
 		this->score -= 1;
 		this->refresh_score = true;
 		
@@ -697,35 +696,6 @@ void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, con
 }
 
 //Stage HUD functions
-static void Stage_DrawHealth(s16 health, u8 i, s8 ox)
-{
-	//Check if we should use 'dying' frame
-	s8 dying;
-	if (ox < 0)
-		dying = (health >= 18000) * 24;
-	else
-		dying = (health <= 2000) * 24;
-	
-	//Get src and dst
-	fixed_t hx = (128 << FIXED_SHIFT) * (10000 - health) / 10000;
-	RECT src = {
-		(i % 5) * 48 + dying,
-		16 + (i / 5) * 24,
-		24,
-		24
-	};
-	RECT_FIXED dst = {
-		hx + ox * FIXED_DEC(11,1) - FIXED_DEC(12,1),
-		FIXED_DEC(SCREEN_HEIGHT2 - 32 + 4 - 12, 1),
-		src.w << FIXED_SHIFT,
-		src.h << FIXED_SHIFT
-	};
-	if (stage.downscroll)
-		dst.y = -dst.y - dst.h;
-	
-	//Draw health icon
-	Stage_DrawTex(&stage.tex_hud1, &src, &dst, FIXED_MUL(stage.bump, stage.sbump));
-}
 
 static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
 {
@@ -825,7 +795,7 @@ static void Stage_DrawNotes(void)
 					//Missed note
 					Stage_CutVocal();
 					Stage_MissNote(this);
-					this->health -= 475;
+					this->health -= 575;
 					
 					//Send miss packet
 					#ifdef PSXF_NETWORK
@@ -895,6 +865,11 @@ static void Stage_DrawNotes(void)
 							note_dst.y = -note_dst.y;
 							note_dst.h = -note_dst.h;
 						}
+						
+						if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
+
+						else
 						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 					}
 				}
@@ -919,55 +894,15 @@ static void Stage_DrawNotes(void)
 						
 						if (stage.downscroll)
 							note_dst.y = -note_dst.y - note_dst.h;
+						
+						if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
+
+						else
 						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 					}
 				}
 			}
-			else if (note->type & NOTE_FLAG_THUNDER)
-			{
-				//Don't draw if already hit
-				if (note->type & NOTE_FLAG_HIT)
-					continue;
-				
-				//Draw note body
-				note_src.x = 192 + ((note->type & 0x1) << 5);
-				note_src.y = (note->type & 0x2) << 4;
-				note_src.w = 32;
-				note_src.h = 32;
-				
-				note_dst.x = FIXED_DEC(bfnotex,1) + note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
-				note_dst.y = y - FIXED_DEC(16,1);
-				note_dst.w = note_src.w << FIXED_SHIFT;
-				note_dst.h = note_src.h << FIXED_SHIFT;
-				
-				if (stage.downscroll)
-					note_dst.y = -note_dst.y - note_dst.h;
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
-				
-					//Draw note halo
-					note_src.x = 160;
-					note_src.y = 128 + ((animf_count & 0x3) << 3);
-					note_src.w = 32;
-					note_src.h = 8;
-					
-					note_dst.y -= FIXED_DEC(6,1);
-					note_dst.h >>= 2;
-					
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
-	
-					
-					if (stage.downscroll)
-					{
-						note_dst.y += note_dst.h;
-						note_dst.h = note_dst.h * -3 / 2;
-					}
-					else
-					{
-						note_dst.h = note_dst.h * 3 / 2;
-					}
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
-				}
-			
 			else if (note->type & NOTE_FLAG_FIRE)
 			{
 				//Don't draw if already hit
@@ -976,7 +911,35 @@ static void Stage_DrawNotes(void)
 				
 				//Draw note body
 				note_src.x = 192 + ((note->type & 0x1) << 5);
-				note_src.y = (note->type & 0x2) << 4;
+				note_src.y = 64 + ((note->type & 0x2) << 4);
+				note_src.w = 32;
+				note_src.h = 36;
+				
+				note_dst.x = FIXED_DEC(bfnotex,1) + note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
+				note_dst.y = y - FIXED_DEC(16,1);
+				note_dst.w = note_src.w << FIXED_SHIFT;
+				note_dst.h = note_src.h << FIXED_SHIFT;
+				
+				if (stage.downscroll)
+					note_dst.y = -note_dst.y - note_dst.h;
+				
+				if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
+
+						else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+	
+			}
+			
+			else if (note->type & NOTE_FLAG_THUNDER)
+			{
+				//Don't draw if already hit
+				if (note->type & NOTE_FLAG_HIT)
+					continue;
+				
+				//Draw note body
+				note_src.x = 193 + ((note->type & 0x1) << 5);
+				note_src.y =  ((note->type & 0x2) << 4);
 				note_src.w = 32;
 				note_src.h = 32;
 				
@@ -987,25 +950,14 @@ static void Stage_DrawNotes(void)
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				
+				if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
 
-					//Draw note fire
-					note_src.x = 192 + ((animf_count & 0x1) << 5);
-					note_src.y = 64 + ((animf_count & 0x2) * 24);
-					note_src.w = 32;
-					note_src.h = 48;
+						else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 					
-					if (stage.downscroll)
-					{
-						note_dst.y += note_dst.h;
-						note_dst.h = note_dst.h * -3 / 2;
-					}
-					else
-					{
-						note_dst.h = note_dst.h * 3 / 2;
-					}
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
-				}
+			}
 			
 			else
 			{
@@ -1026,7 +978,13 @@ static void Stage_DrawNotes(void)
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+
+			
+		        	if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
+
+						else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 			}
 		}
 	}
@@ -1243,8 +1201,9 @@ static void Stage_LoadState(void)
 	{
 		memset(stage.player_state[i].arrow_hitan, 0, sizeof(stage.player_state[i].arrow_hitan));
 		
-		stage.player_state[i].health = 10000;
+		stage.player_state[i].health = 20000;
 		stage.player_state[i].combo = 0;
+		stage.gameboy = 0;
 		
 		stage.player_state[i].refresh_score = false;
 		stage.player_state[i].score = 0;
@@ -1267,11 +1226,9 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	stage.story = story;
 	
 	//Load HUD textures
-	if (id >= StageId_6_1 && id <= StageId_6_3)
-		Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0WEEB.TIM;1"), GFX_LOADTEX_FREE);
-	else
+		Gfx_LoadTex(&stage.tex_hud0weeb, IO_Read("\\STAGE\\HUD0WEEB.TIM;1"), GFX_LOADTEX_FREE);
 		Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
-	Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
+    	Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
 	
 	//Load stage background
 	Stage_LoadStage();
@@ -1469,7 +1426,7 @@ void Stage_Tick(void)
 					if (stage.stage_id <= StageId_LastVanilla)
 					{
 						if (stage.story)
-							Menu_Load(MenuPage_Opening);
+							Menu_Load(MenuPage_Main);
 						else
 							Menu_Load(MenuPage_Freeplay);
 					}
@@ -1527,12 +1484,44 @@ void Stage_Tick(void)
 			boolean playing;
 			fixed_t next_scroll;
 
+			//timer
+              FntPrint("timercount %d ", stage.song_step);
+
 			if (stage.mode == StageMode_Normal || stage.mode == StageMode_Swap)
 			   bfnotex = -153;
 
-			
-			
-			
+			else
+			  bfnotex = 0;
+
+			switch(stage.song_step)
+			{
+			case 511:
+			stage.gameboy = 1;
+			break;
+			case 576:
+			stage.gameboy = 0;
+			break;
+			case 640:
+			stage.gameboy = 1;
+			break;
+			case 705:
+			stage.gameboy = 0;
+			break;
+			case 1056:
+			stage.gameboy = 1;
+			break;
+			case 1260:
+			stage.gameboy = 0;
+			break;
+			case 1351:
+			stage.gameboy = 1;
+			break;
+			case 1408:
+			stage.gameboy = 1;
+			break;
+			}
+
+
 			#ifdef PSXF_NETWORK
 			if (stage.mode >= StageMode_Net1 && !Network_IsReady())
 			{
@@ -1791,15 +1780,25 @@ void Stage_Tick(void)
 				//BF
 				note_dst.x = FIXED_DEC(bfnotex,1) + note_x[i] - FIXED_DEC(16,1);
 				Stage_DrawStrum(i, &note_src, &note_dst);
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+                
+				       if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
+
+						else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 				
 				
 				//Opponent
-				if (stage.mode == StageMode_2P)
+				if (stage.mode > StageMode_Swap)
 				{
 				note_dst.x = FIXED_DEC(bfnotex,1) + note_x [(i | 0x4)] - FIXED_DEC(16,1);
 				Stage_DrawStrum(i | 4, &note_src, &note_dst);
-				Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				
+			            if (stage.gameboy == 1)
+						Stage_DrawTex(&stage.tex_hud0weeb, &note_src, &note_dst, stage.bump);
+
+						else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
 				}
 			}
 			
@@ -1864,22 +1863,24 @@ void Stage_Tick(void)
 				if (stage.player_state[0].health > 20000)
 					stage.player_state[0].health = 20000;
 				
-				//Draw health heads
-				Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i,    1);
-				Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, -1);
-				
 				//Draw health bar
-				RECT health_fill = {0, 0, 256 - (256 * stage.player_state[0].health / 20000), 8};
-				RECT health_back = {0, 8, 256, 8};
-				RECT_FIXED health_dst = {FIXED_DEC(-128,1), (SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, 0, FIXED_DEC(8,1)};
-				if (stage.downscroll)
-					health_dst.y = -health_dst.y - health_dst.h;
+				RECT health_fill = {71,123, 72 - (72 * stage.player_state[0].health / 20000), 3};
+				RECT health_back = {71,118, 72, 3};
+				RECT_FIXED health_dst = {FIXED_DEC(36,1), (SCREEN_HEIGHT2 - 56) << FIXED_SHIFT, FIXED_DEC(72,1), FIXED_DEC(2,1)};
 				
 				health_dst.w = health_fill.w << FIXED_SHIFT;
 				Stage_DrawTex(&stage.tex_hud1, &health_fill, &health_dst, stage.bump);
 				health_dst.w = health_back.w << FIXED_SHIFT;
 				Stage_DrawTex(&stage.tex_hud1, &health_back, &health_dst, stage.bump);
-			}
+			
+
+			//Draw health Stuff
+			RECT health_stuff = { 0, 0,256, 89};
+			RECT_FIXED healths_dst = {FIXED_DEC(0,1), FIXED_DEC(42,1), FIXED_DEC(128,1), FIXED_DEC(45,1)};
+
+			Stage_DrawTex(&stage.tex_hud1, &health_stuff, &healths_dst, stage.bump);
+		}
+		
 			
 			//Hardcoded stage stuff
 			switch (stage.stage_id)
@@ -2065,7 +2066,7 @@ void Stage_NetHit(Packet *packet)
 		this->arrow_hitan[type] = stage.step_time;
 		this->character->set_anim(this->character, note_anims[type & 0x3][(note->type & NOTE_FLAG_ALT_ANIM) != 0]);
 	}
-	else if (!(note->type & NOTE_FLAG_MINE))
+	else if (!(note->type & (NOTE_FLAG_FIRE | NOTE_FLAG_THUNDER)))
 	{
 		//Hit a note
 		Stage_StartVocal();

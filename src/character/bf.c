@@ -96,17 +96,32 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_BF2, {  0,  128, 125, 128}, { 58,  100}}, //10 right 1
 	{BF_ArcMain_BF2, {125,  128, 131, 128}, { 47,  97}}, //11 right 2
 	
-	{BF_ArcMain_BF3, {  0,   0,  93, 108}, { 52, 101}}, //20 left miss 1
-	{BF_ArcMain_BF3, { 94,   0,  93, 108}, { 52, 101}}, //21 left miss 2
+	{BF_ArcMain_BF3, {  0,   0,  93, 108}, { 52, 101}}, //12 left miss 1
+	{BF_ArcMain_BF3, { 94,   0,  93, 108}, { 52, 101}}, //13 left miss 2
 	
-	{BF_ArcMain_BF3, {  0, 109,  95,  98}, { 50,  90}}, //22 down miss 1
-	{BF_ArcMain_BF3, { 96, 109,  95,  97}, { 50,  89}}, //23 down miss 2
+	{BF_ArcMain_BF3, {  0, 109,  95,  98}, { 50,  90}}, //14 down miss 1
+	{BF_ArcMain_BF3, { 96, 109,  95,  97}, { 50,  89}}, //15 down miss 2
 	
-	{BF_ArcMain_BF4, {  0,   0,  90, 107}, { 44,  99}}, //24 up miss 1
-	{BF_ArcMain_BF4, { 91,   0,  89, 108}, { 44, 100}}, //25 up miss 2
+	{BF_ArcMain_BF4, {  0,   0,  90, 107}, { 44,  99}}, //16 up miss 1
+	{BF_ArcMain_BF4, { 91,   0,  89, 108}, { 44, 100}}, //17 up miss 2
 	
-	{BF_ArcMain_BF4, {  0, 108,  99, 108}, { 42, 101}}, //26 right miss 1
-	{BF_ArcMain_BF4, {100, 109, 101, 108}, { 43, 101}}, //27 right miss 2
+	{BF_ArcMain_BF4, {  0, 108,  99, 108}, { 42, 101}}, //18 right miss 1
+	{BF_ArcMain_BF4, {100, 109, 101, 108}, { 43, 101}}, //19 right miss 2
+
+	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //23 dead0 0
+	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //24 dead0 1
+	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //25 dead0 2
+	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //26 dead0 3
+	
+	{BF_ArcDead_Dead1, {  0,   0, 128, 128}, { 53,  98}}, //27 dead1 0
+	{BF_ArcDead_Dead1, {128,   0, 128, 128}, { 53,  98}}, //28 dead1 1
+	{BF_ArcDead_Dead1, {  0, 128, 128, 128}, { 53,  98}}, //29 dead1 2
+	{BF_ArcDead_Dead1, {128, 128, 128, 128}, { 53,  98}}, //30 dead1 3
+	
+	{BF_ArcDead_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //31 dead2 body twitch 0
+	{BF_ArcDead_Dead2, {128,   0, 128, 128}, { 53,  98}}, //32 dead2 body twitch 1
+	{BF_ArcDead_Dead2, {  0, 128, 128, 128}, { 53,  98}}, //33 dead2 balls twitch 0
+	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //34 dead2 balls twitch 1
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
@@ -128,12 +143,12 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
 	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
 	
-	{5, (const u8[]){23, 24, 25, 26, 26, 26, 26, 26, 26, 26, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
-	{5, (const u8[]){26, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
-	{3, (const u8[]){27, 28, 29, 30, 30, 30, 30, 30, 30, 30, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
-	{3, (const u8[]){30, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
-	{3, (const u8[]){31, 32, 30, 30, 30, 30, 30, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
-	{3, (const u8[]){33, 34, 30, 30, 30, 30, 30, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
+	{5, (const u8[]){23-3, 24-3, 25-3, 26-3, 26-3, 26-3, 26-3, 26-3, 26-3, 26-3, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
+	{5, (const u8[]){26-3, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
+	{3, (const u8[]){27-3, 28-3, 29-3, 30-3, 30-3, 30-3, 30-3, 30-3, 30-3, 30-3, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
+	{3, (const u8[]){30-3, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
+	{3, (const u8[]){31-3, 32-3, 30-3, 30-3, 30-3, 30-3, 30-3, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
+	{3, (const u8[]){33-3, 34-3, 30-3, 30-3, 30-3, 30-3, 30-3, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
 	
 	{10, (const u8[]){30, 30, 30, ASCR_BACK, 1}}, //PlayerAnim_Dead4
 	{ 3, (const u8[]){33, 34, 30, ASCR_REPEAT}},  //PlayerAnim_Dead5
@@ -366,7 +381,7 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	Character_Init((Character*)this, x, y);
 	
 	//Set character information
-	this->character.spec = 0;
+	this->character.spec = CHAR_SPEC_MISSANIM;
 	
 	this->character.health_i = 0;
 	

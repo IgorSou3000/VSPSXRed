@@ -533,7 +533,7 @@ void Menu_Tick(void)
 		case MenuPage_Main:
 		{
 			static const char *menu_options[] = {
-				"STORY MODE",
+				"NEW GAME",
 				"MODS",
 				"OPTIONS",
 				#ifdef PSXF_NETWORK
@@ -551,13 +551,6 @@ void Menu_Tick(void)
 					FIXED_DEC(12,1);
 				#endif
 			
-			//Draw version identification
-			menu.font_bold.draw(&menu.font_bold,
-				"PSXFUNKIN BY CUCKYDEV",
-				16,
-				SCREEN_HEIGHT - 32,
-				FontAlign_Left
-			);
 			
 			//Handle option and selection
 			if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)

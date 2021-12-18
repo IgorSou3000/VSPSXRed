@@ -190,7 +190,7 @@ typedef struct
 	u32 offset;
 	
 	//HUD textures
-	Gfx_Tex tex_hud0, tex_hud1;
+	Gfx_Tex tex_hud0, tex_hud0weeb , tex_hud1;
 	
 	//Stage data
 	const StageDef *stage_def;
@@ -237,6 +237,10 @@ typedef struct
 	Section *section_base;
 	
 	s16 song_step;
+
+	u8 gameboy;
+	u8 flame;
+	u8 thunderbolt;
 	
 	u8 gf_speed; //Typically 4 steps, changes in Fresh
 	
