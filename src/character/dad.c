@@ -39,22 +39,22 @@ typedef struct
 
 //Dad character definitions
 static const CharFrame char_dad_frame[] = {
-	{Dad_ArcMain_Idle0, {  0,   0, 109, 190}, { 51, 167}}, //0 idle 1
-	{Dad_ArcMain_Idle0, {113,   0, 107, 190}, { 44, 167}}, //1 idle 2
-	{Dad_ArcMain_Idle1, {  0,   0, 113, 190}, { 51, 167}}, //2 idle 3
-	{Dad_ArcMain_Idle1, {113,   0, 107, 190}, { 45, 167}}, //3 idle 4
+	{Dad_ArcMain_Idle0, {  6,   5, 103, 177}, { 44, 177}}, //0 idle 1
+	{Dad_ArcMain_Idle0, {109,   5, 105, 178}, { 46, 178}}, //1 idle 2
+	{Dad_ArcMain_Idle1, {  3,   4, 110, 178}, { 48, 178}}, //2 idle 3
+	{Dad_ArcMain_Idle1, {113,   4, 105, 178}, { 45, 178}}, //3 idle 4
 	
-	{Dad_ArcMain_Left, {  0,   0,  133, 190}, { 64, 169}}, //4 left 1
-	{Dad_ArcMain_Left, {133,   0,  123, 190}, { 55, 169}}, //5 left 2
+	{Dad_ArcMain_Left, {  12,   7,  121, 179}, { 52, 179}}, //4 left 1
+	{Dad_ArcMain_Left, {133,   7,  122, 179}, { 53, 179}}, //5 left 2
 	
-	{Dad_ArcMain_Down, {  0,   0, 129, 190}, { 64, 169}}, //6 down 1
-	{Dad_ArcMain_Down, {129,   0, 127, 190}, { 51, 169}}, //7 down 2
+	{Dad_ArcMain_Down, {  16,   12, 113, 174}, { 48, 174}}, //6 down 1
+	{Dad_ArcMain_Down, {129,   12, 117, 173}, { 49, 173}}, //7 down 2
 	
-	{Dad_ArcMain_Up, {  0,   0, 119, 190}, { 62, 169}}, //8 up 1
-	{Dad_ArcMain_Up, {119,   0, 137, 190}, { 41, 171}}, //9 up 2
+	{Dad_ArcMain_Up, {  22,   5, 97, 180}, { 44, 180}}, //8 up 1
+	{Dad_ArcMain_Up, {119,   5, 93, 182}, { 43, 182}}, //9 up 2
 	
-	{Dad_ArcMain_Right, {  0,   0, 135, 190}, { 65, 169}}, //10 right 1
-	{Dad_ArcMain_Right, {135,   0, 121, 190}, { 46, 171}}, //11 right 2
+	{Dad_ArcMain_Right, {  21,   7, 114, 178}, { 45, 178}}, //10 right 1
+	{Dad_ArcMain_Right, {135,   7, 117, 179}, { 45, 179}}, //11 right 2
 };
 
 static const Animation char_dad_anim[CharAnim_Max] = {

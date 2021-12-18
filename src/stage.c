@@ -57,6 +57,8 @@ static const u8 note_anims[4][3] = {
 #include "character/bf.h"
 #include "character/bfweeb.h"
 #include "character/dad.h"
+#include "character/redm.h"
+#include "character/charm.h"
 #include "character/spook.h"
 #include "character/pico.h"
 #include "character/mom.h"
