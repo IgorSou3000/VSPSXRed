@@ -94,7 +94,7 @@ iso/gf/weeb.arc: iso/gf/weeb0.tim iso/gf/weeb1.tim
 iso/clucky/main.arc: iso/clucky/idle0.tim iso/clucky/idle1.tim iso/clucky/left.tim iso/clucky/down.tim iso/clucky/up.tim iso/clucky/right.tim
 
 # Week 1
-iso/week1/back.arc: iso/week1/back0.tim
+iso/week1/back.arc: iso/week1/back0.tim iso/week1/pixelp.tim
 iso/week1/pika.arc: iso/week1/pika0.tim iso/week1/pika1.tim
 iso/week1/char.arc: iso/week1/char0.tim iso/week1/char1.tim iso/week1/char2.tim iso/week1/char3.tim iso/week1/char4.tim iso/week1/char5.tim
 

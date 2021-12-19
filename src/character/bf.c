@@ -460,8 +460,8 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	
 	this->character.health_i = 0;
 	
-	this->character.focus_x = FIXED_DEC(140,1);
-	this->character.focus_y = FIXED_DEC(-145,1);
+	this->character.focus_x = FIXED_DEC(160,1);
+	this->character.focus_y = FIXED_DEC(-160,1);
 	this->character.focus_zoom = FIXED_DEC(8,10);
 	
 	//Load art

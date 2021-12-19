@@ -22,6 +22,7 @@ typedef struct
 	IO_Data arc_char, arc_char_ptr[6];
 
 	Gfx_Tex tex_back0; //Stage and back
+	Gfx_Tex tex_pixelp;
 
 	//Pikachu state
 	Gfx_Tex tex_pika;
@@ -46,12 +47,13 @@ static const CharFrame pika_frame[] = {
 	{0, {135, 122, 112, 90}, { 51,  90}}, //3 left 4
 	{1, {36, 9, 108, 90}, { 51,  90}}, //3 left 4
 	
-	{1, {  31,   127, 105, 86}, { 69,  86}}, //5 right 1
+	{1, {  31,  127, 105, 86}, { 69,  86}}, //5 right 1
 	{1, {136,   128,  104, 86}, { 69, 86}}, //6 right 2
 };
 
 static const Animation pika_anim[] = {
-	{2, (const u8[]){0, 1, 2, 3, 4, 5, 6, ASCR_BACK, 1}}, //Left
+	{2, (const u8[]){0, 1, 2, 3, 4,  ASCR_BACK, 1}}, //Left
+	{2, (const u8[]){5, 5, 5, 6, 6, 6,  ASCR_BACK, 1}}, //Left
 };
 
 //Pikachu functions
@@ -93,6 +95,7 @@ static const CharFrame char_frame[] = {
 
 static const Animation char_anim[] = {
 	{2, (const u8[]){0, 1, 2, 3, 4, ASCR_BACK, 1}}, //Left
+	{2, (const u8[]){5, 5, 5, 5, 5, ASCR_BACK, 1}}, //Left
 };
 
 
@@ -147,7 +150,40 @@ void Back_Week1_DrawFG(StageBack *back)
 	Animatable_Animate(&this->pika_animatable, (void*)this, Week1_Pika_SetFrame);
 	
 	if (stage.gameboy != 1)
-	Week1_Pika_Draw(this, FIXED_DEC(160,1) - fx, FIXED_DEC(80,1) - fy);
+	Week1_Pika_Draw(this, FIXED_DEC(220,1) - fx, FIXED_DEC(80,1) - fy);
+
+	if (stage.gameboy != 1 && stage.thunderbolt == 1)
+	Animatable_SetAnim(&this->pika_animatable, 1);
+
+	fixed_t beat_bop;
+	if ((stage.song_step & 0x3) == 0)
+		beat_bop = FIXED_UNIT - ((stage.note_scroll / 24) & FIXED_LAND);
+	else
+		beat_bop = 0;
+
+	if (stage.gameboy == 1)
+	{
+	 //Draw boppers
+	static const struct Back_Week1_LowerBop
+	{
+		RECT src;
+		RECT_FIXED dst;
+	} lbop_piece[] = {
+		{{0, 0, 88, 90}, {FIXED_DEC(190,1), FIXED_DEC( 10,1), FIXED_DEC(88,1), FIXED_DEC(90,1)}},
+	};
+	
+	const struct Back_Week1_LowerBop *lbop_p = lbop_piece;
+	for (size_t i = 0; i < COUNT_OF(lbop_piece); i++, lbop_p++)
+	{
+		RECT_FIXED lbop_dst = {
+			lbop_p->dst.x - fx - (beat_bop << 1),
+			lbop_p->dst.y - fy + (beat_bop << 3),
+			lbop_p->dst.w + (beat_bop << 2),
+			lbop_p->dst.h - (beat_bop << 3),
+		};
+		Stage_DrawTex(&this->tex_pixelp, &lbop_p->src, &lbop_dst, stage.camera.bzoom);
+	}
+}
 }
 
 void Back_Week1_DrawBG(StageBack *back)
@@ -172,17 +208,20 @@ void Back_Week1_DrawBG(StageBack *back)
 	Animatable_Animate(&this->char_animatable, (void*)this, Week1_Char_SetFrame);
 	
 	if (stage.gameboy != 1)
-	Week1_Char_Draw(this, FIXED_DEC(80,1) - fx, FIXED_DEC(80,1) - fy);
+	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(60,1) - fy);
+
+	if (stage.gameboy != 1 && stage.flame == 1)
+	Animatable_SetAnim(&this->char_animatable, 1);
 	
 
 	if (stage.gameboy != 1)
 	{
 	RECT back_src = {0, 0, 256, 141};
 	RECT_FIXED back_dst = {
-		FIXED_DEC(-278,1) - fx,
-		FIXED_DEC(-100,1) - fy,
-		FIXED_DEC(540,1),
-		FIXED_DEC(341,1)
+		FIXED_DEC(-310,1) - fx,
+		FIXED_DEC(-130,1) - fy,
+		FIXED_DEC(630,1),
+		FIXED_DEC(381,1)
 	};
 
 	Stage_DrawTex(&this->tex_back0, &back_src, &back_dst, stage.camera.bzoom);
@@ -195,7 +234,7 @@ void Back_Week1_Free(StageBack *back)
 	
 	//Free Pikachu archive
 	Mem_Free(this->arc_pika);
-
+    Mem_Free(this->arc_char);
 
 	//Free structure
 	Mem_Free(this);
@@ -217,6 +256,7 @@ StageBack *Back_Week1_New(void)
 	//Load background textures
 	IO_Data arc_back = IO_Read("\\WEEK1\\BACK.ARC;1");
 	Gfx_LoadTex(&this->tex_back0, Archive_Find(arc_back, "back0.tim"), 0);
+	Gfx_LoadTex(&this->tex_pixelp, Archive_Find(arc_back, "pixelp.tim"), 0);
 	Mem_Free(arc_back);
 
 	//Load pikachu textures

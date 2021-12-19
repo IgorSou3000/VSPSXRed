@@ -23,10 +23,14 @@
 #include "object/splash.h"
 
 int bfnotex = 0;
+int thundercooldown = 0;
+int thunder = 0;
+int flamecooldown = 0;
+int flame = 0;
 
 
 //Stage constants
-#define STAGE_PERFECT //Play all notes perfectly
+//#define STAGE_PERFECT //Play all notes perfectly
 //#define STAGE_NOHUD //Disable the HUD
 
 //#define STAGE_FREECAM //Freecam
@@ -355,7 +359,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			#endif
 			return;
 		}
-		else
+		else if ((note->type & ( NOTE_FLAG_THUNDER)))
 		{
 			//Check if mine can be hit
 			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
@@ -370,10 +374,64 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			note->type |= NOTE_FLAG_HIT;
 			
 				this->health -= 3500;
+			
+			stage.thunderbolt = 1;
 
-			if (this->character->spec & CHAR_SPEC_MISSANIM)
-				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
-			else if (stage.gameboy == 1)
+		    if (stage.gameboy == 1)
+			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
+
+	       else
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+
+			this->arrow_hitan[type & 0x3] = -1;
+			
+			#ifdef PSXF_NETWORK
+				if (stage.mode >= StageMode_Net1)
+				{
+					//Send note hit packet
+					Packet note_hit;
+					note_hit[0] = PacketType_NoteHit;
+					
+					u16 note_i = note - stage.notes;
+					note_hit[1] = note_i >> 0;
+					note_hit[2] = note_i >> 8;
+					
+					note_hit[3] = this->score >> 0;
+					note_hit[4] = this->score >> 8;
+					note_hit[5] = this->score >> 16;
+					note_hit[6] = this->score >> 24;
+					
+					/*
+					note_hit[7] = 0xFF;
+					
+					note_hit[8] = this->combo >> 0;
+					note_hit[9] = this->combo >> 8;
+					*/
+					
+					Network_Send(&note_hit);
+				}
+			#endif
+			return;
+		}
+
+		else
+		{
+			//Check if mine can be hit
+			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
+			if (note_fp - (stage.late_safe * 3 / 5) > stage.note_scroll)
+				break;
+			if (note_fp + (stage.late_safe * 2 / 5) < stage.note_scroll)
+				continue;
+			if ((note->type & NOTE_FLAG_HIT) || (note->type & (NOTE_FLAG_OPPONENT | 0x3)) != type || (note->type & NOTE_FLAG_SUSTAIN))
+				continue;
+			
+			//Hit the mine
+			note->type |= NOTE_FLAG_HIT;
+
+			    stage.flame = 1;
+				this->health -= 3500;
+
+             if (stage.gameboy == 1)
 			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
 
 	       else
@@ -469,6 +527,7 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 	   if (stage.gameboy == 1)
 		this->character->set_anim(this->character, note_anims[type & 0x3][1]);
 
+		else
 		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 		
 		Stage_StartVocal();
@@ -927,10 +986,12 @@ static void Stage_DrawNotes(void)
 					continue;
 				
 				//Draw note body
+
 				note_src.x = 192 + ((note->type & 0x1) << 5);
 				note_src.y = 64 + ((note->type & 0x2) << 4);
 				note_src.w = 32;
 				note_src.h = 36;
+				
 				
 				note_dst.x = FIXED_DEC(bfnotex,1) + note_x[(note->type & 0x7)] - FIXED_DEC(16,1);
 				note_dst.y = y - FIXED_DEC(16,1);
@@ -1515,27 +1576,68 @@ void Stage_Tick(void)
 			case 511:
 			stage.gameboy = 1;
 			break;
-			case 576:
+			case 574:
 			stage.gameboy = 0;
 			break;
-			case 640:
+			case 641:
 			stage.gameboy = 1;
 			break;
-			case 705:
+			case 703:
 			stage.gameboy = 0;
 			break;
-			case 1056:
+			case 1055:
 			stage.gameboy = 1;
 			break;
 			case 1264:
 			stage.gameboy = 0;
 			break;
-			case 1346:
+			case 1347:
 			stage.gameboy = 1;
 			break;
 			case 1408:
 			stage.gameboy = 0;
 			break;
+			}
+
+			if (stage.thunderbolt == 1)
+			{
+			RECT dst_laser = {0, 0, 400, 400};
+
+			if (thunder != 10)
+			{
+			Gfx_BlendRect(&dst_laser, 228, 253, 1, 0);
+			thunder++;
+			}
+
+			 thundercooldown++;
+			   				
+			 if (thundercooldown == 20)
+			 {
+			   stage.thunderbolt = 0;
+			   thundercooldown = 0;
+			   thunder = 0;
+
+			 }
+			}
+			if (stage.flame == 1)
+			{
+			RECT dst_laser = {0, 0, 400, 400};
+
+			if (flame != 10)
+			{
+			Gfx_BlendRect(&dst_laser, 253, 114, 1, 0);
+			flame++;
+			}
+
+			 flamecooldown++;	
+			
+			 if (flamecooldown == 20)
+			 {
+			   stage.flame = 0;
+			   flamecooldown = 0;
+			   flame = 0;
+
+			 }
 			}
 
 

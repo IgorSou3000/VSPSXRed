@@ -1,7 +1,7 @@
 	{ //StageId_1_1 (Bopeebo)
 		//Characters
-		{Char_BF_New,    FIXED_DEC(-120,1),  FIXED_DEC(200,1)},
-		{Char_Dad_New, FIXED_DEC(110,1),  FIXED_DEC(60,1)},
+		{Char_BF_New,    FIXED_DEC(-80,1),  FIXED_DEC(200,1)},
+		{Char_Dad_New, FIXED_DEC(160,1),  FIXED_DEC(80,1)},
 		{NULL,     FIXED_DEC(0,1),  FIXED_DEC(-10,1)},
 		
 		//Stage background
