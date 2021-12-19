@@ -19,6 +19,7 @@ typedef struct
 	
 	//Textures
 	IO_Data arc_pika, arc_pika_ptr[2];
+	IO_Data arc_char, arc_char_ptr[6];
 
 	Gfx_Tex tex_back0; //Stage and back
 
@@ -27,6 +28,12 @@ typedef struct
 	u8 pika_frame, pika_tex_id;
 	
 	Animatable pika_animatable;
+
+	//Charizard state
+	Gfx_Tex tex_char;
+	u8 char_frame, char_tex_id;
+	
+	Animatable char_animatable;
 
 
 } Back_Week1;
@@ -74,6 +81,48 @@ void Week1_Pika_Draw(Back_Week1 *this, fixed_t x, fixed_t y)
 	RECT_FIXED dst = {ox, oy, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
 	Stage_DrawTex(&this->tex_pika, &src, &dst, stage.camera.bzoom);
 }
+//Charizard animation and rects
+static const CharFrame char_frame[] = {
+	{0, {  0,   0, 125, 118}, { 71,  97}}, //0 left 1
+	{1, {125,   0, 131, 118}, { 36,  97}}, //1 left 2
+	{2, {  0, 118, 135, 128}, { 71,  92}}, //2 left 3
+	{3, {135, 118, 121, 128}, { 36,  92}}, //3 left 4
+	{4, {  0,   0, 140, 118}, { 71,  97}}, //5 right 1
+	{5, {  0,   0, 140, 118}, { 71,  97}}, //5 right 1
+};
+
+static const Animation char_anim[] = {
+	{2, (const u8[]){0, 1, 2, 3, 4, ASCR_BACK, 1}}, //Left
+};
+
+
+//Charizard functions
+void Week1_Char_SetFrame(void *user, u8 frame)
+{
+	Back_Week1 *this = (Back_Week1*)user;
+	
+	//Check if this is a new frame
+	if (frame != this->char_frame)
+	{
+		//Check if new art shall be loaded
+		const CharFrame *cframe = &char_frame[this->char_frame = frame];
+		if (cframe->tex != this->char_tex_id)
+			Gfx_LoadTex(&this->tex_char, this->arc_char_ptr[this->char_tex_id = cframe->tex], 0);
+	}
+}
+
+void Week1_Char_Draw(Back_Week1 *this, fixed_t x, fixed_t y)
+{
+	//Draw character
+	const CharFrame *cframe = &char_frame[this->char_frame];
+	
+	fixed_t ox = x - ((fixed_t)cframe->off[0] << FIXED_SHIFT);
+	fixed_t oy = y - ((fixed_t)cframe->off[1] << FIXED_SHIFT);
+	
+	RECT src = {cframe->src[0], cframe->src[1], cframe->src[2], cframe->src[3]};
+	RECT_FIXED dst = {ox, oy, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
+	Stage_DrawTex(&this->tex_char, &src, &dst, stage.camera.bzoom);
+}
 
 //Week 1 background functions
 void Back_Week1_DrawFG(StageBack *back)
@@ -109,6 +158,19 @@ void Back_Week1_DrawBG(StageBack *back)
 	//Draw stage
 	fx = stage.camera.x;
 	fy = stage.camera.y;
+
+	if (stage.flag & STAGE_FLAG_JUST_STEP)
+	{
+		switch (stage.song_step & 7)
+		{
+			case 0:
+				Animatable_SetAnim(&this->char_animatable, 0);
+				break;
+		}
+	}
+	Animatable_Animate(&this->char_animatable, (void*)this, Week1_Char_SetFrame);
+	
+	Week1_Char_Draw(this, FIXED_DEC(80,1) - fx, FIXED_DEC(80,1) - fy);
 	
 	RECT back_src = {0, 0, 256, 141};
 	RECT_FIXED back_dst = {
@@ -156,10 +218,24 @@ StageBack *Back_Week1_New(void)
 	this->arc_pika_ptr[0] = Archive_Find(this->arc_pika, "pika0.tim");
 	this->arc_pika_ptr[1] = Archive_Find(this->arc_pika, "pika1.tim");
 
+	//Load charizard textures
+	this->arc_char = IO_Read("\\WEEK1\\CHAR.ARC;1");
+	this->arc_char_ptr[0] = Archive_Find(this->arc_char, "char0.tim");
+	this->arc_char_ptr[1] = Archive_Find(this->arc_char, "char1.tim");
+	this->arc_char_ptr[2] = Archive_Find(this->arc_char, "char2.tim");
+	this->arc_char_ptr[3] = Archive_Find(this->arc_char, "char3.tim");
+	this->arc_char_ptr[4] = Archive_Find(this->arc_char, "char4.tim");
+	this->arc_char_ptr[5] = Archive_Find(this->arc_char, "char5.tim");
+
 	//Initialize pikachu state
 	Animatable_Init(&this->pika_animatable, pika_anim);
 	Animatable_SetAnim(&this->pika_animatable, 0);
 	this->pika_frame = this->pika_tex_id = 0xFF; //Force art load
+
+	//Initialize charizard state
+	Animatable_Init(&this->char_animatable, char_anim);
+	Animatable_SetAnim(&this->char_animatable, 0);
+	this->char_frame = this->char_tex_id = 0xFF; //Force art load
 	
 	return (StageBack*)this;
 }

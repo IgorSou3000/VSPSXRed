@@ -44,8 +44,8 @@
 			<dir name = "week1">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
-
 				<file name = "pika.arc" type = "data" source = "iso/week1/pika.arc"/>
+				<file name = "char.arc" type = "data" source = "iso/week1/char.arc"/>
 				
 				<!-- Bopeebo charts -->
 				<file name = "1.1e.cht" type = "data" source = "iso/chart/bopeebo-easy.json.cht"/>
