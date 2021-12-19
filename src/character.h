@@ -25,6 +25,7 @@ typedef enum
 	CharAnim_Down,  CharAnim_DownAlt,
 	CharAnim_Up,    CharAnim_UpAlt,
 	CharAnim_Right, CharAnim_RightAlt,
+	CharAnim_Idle2,
 	
 	CharAnim_Max //Max standard/shared animation
 } CharAnim;
@@ -66,6 +67,8 @@ void Character_Draw(Character *this, Gfx_Tex *tex, const CharFrame *cframe);
 
 void Character_CheckStartSing(Character *this);
 void Character_CheckEndSing(Character *this);
+void Character_CheckEndSing2(Character *this);
 void Character_PerformIdle(Character *this);
+void Character_PerformIdle2(Character *this);
 
 #endif

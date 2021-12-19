@@ -146,6 +146,7 @@ void Back_Week1_DrawFG(StageBack *back)
 	}
 	Animatable_Animate(&this->pika_animatable, (void*)this, Week1_Pika_SetFrame);
 	
+	if (stage.gameboy != 1)
 	Week1_Pika_Draw(this, FIXED_DEC(160,1) - fx, FIXED_DEC(80,1) - fy);
 }
 
@@ -170,8 +171,12 @@ void Back_Week1_DrawBG(StageBack *back)
 	}
 	Animatable_Animate(&this->char_animatable, (void*)this, Week1_Char_SetFrame);
 	
+	if (stage.gameboy != 1)
 	Week1_Char_Draw(this, FIXED_DEC(80,1) - fx, FIXED_DEC(80,1) - fy);
 	
+
+	if (stage.gameboy != 1)
+	{
 	RECT back_src = {0, 0, 256, 141};
 	RECT_FIXED back_dst = {
 		FIXED_DEC(-278,1) - fx,
@@ -181,6 +186,7 @@ void Back_Week1_DrawBG(StageBack *back)
 	};
 
 	Stage_DrawTex(&this->tex_back0, &back_src, &back_dst, stage.camera.bzoom);
+	}
 }
 
 void Back_Week1_Free(StageBack *back)
@@ -236,6 +242,9 @@ StageBack *Back_Week1_New(void)
 	Animatable_Init(&this->char_animatable, char_anim);
 	Animatable_SetAnim(&this->char_animatable, 0);
 	this->char_frame = this->char_tex_id = 0xFF; //Force art load
+
+	//Use sky coloured background
+	Gfx_SetClear(255, 255, 255);
 	
 	return (StageBack*)this;
 }

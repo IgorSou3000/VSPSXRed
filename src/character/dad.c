@@ -91,13 +91,13 @@ static const CharFrame char_dad_frame[] = {
 static const Animation char_dad_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 3,  2,  1,  0, ASCR_BACK, 1}}, //CharAnim_Idle
 	{2, (const u8[]){ 5,  4, ASCR_BACK, 1}},         //CharAnim_Left
-	{0, (const u8[]){ 18, 19, ASCR_BACK, 1}},        //CharAnim_LeftAlt
+	{2, (const u8[]){ 18, 19, ASCR_BACK, 1}},        //CharAnim_LeftAlt
 	{2, (const u8[]){ 7,  6, ASCR_BACK, 1}},         //CharAnim_Down
-	{0, (const u8[]){ 20, 21, ASCR_BACK, 1}},   //CharAnim_DownAlt
+	{2, (const u8[]){ 20, 21, ASCR_BACK, 1}},   //CharAnim_DownAlt
 	{2, (const u8[]){ 9,  8, ASCR_BACK, 1}},         //CharAnim_Up
-	{0, (const u8[]){ 22, 23, ASCR_BACK, 1}},   //CharAnim_UpAlt
+	{2, (const u8[]){ 22, 23, ASCR_BACK, 1}},   //CharAnim_UpAlt
 	{2, (const u8[]){11, 10, ASCR_BACK, 1}},         //CharAnim_Right
-	{0, (const u8[]){ 24, 25, ASCR_BACK, 1}},   //CharAnim_RightAlt
+	{2, (const u8[]){ 24, 25, ASCR_BACK, 1}},   //CharAnim_RightAlt
 	{2, (const u8[]){ 12,  13,  14,  15,  16,  17, ASCR_BACK, 1}}, //CharAnim_Idleb
 };
 
@@ -122,7 +122,12 @@ void Char_Dad_Tick(Character *character)
 	
 	//Perform idle dance
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
-		Character_PerformIdle(character);
+
+	   if (stage.gameboy == 1)
+		Character_PerformIdle2(character);
+
+	   else
+	    Character_PerformIdle(character);
 	
 	//Animate and draw
 	Animatable_Animate(&character->animatable, (void*)this, Char_Dad_SetFrame);

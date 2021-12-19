@@ -319,7 +319,11 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			//Hit the note
 			note->type |= NOTE_FLAG_HIT;
 			
-			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+			 if (stage.gameboy == 1)
+			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
+	        else
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+
 			u8 hit_type = Stage_HitNote(this, type, stage.note_scroll - note_fp);
 			this->arrow_hitan[type & 0x3] = stage.step_time;
 			
@@ -369,8 +373,12 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 
 			if (this->character->spec & CHAR_SPEC_MISSANIM)
 				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
-			else
-				this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+			else if (stage.gameboy == 1)
+			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
+
+	       else
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+
 			this->arrow_hitan[type & 0x3] = -1;
 			
 			#ifdef PSXF_NETWORK
@@ -410,12 +418,16 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 	{
 		if (this->character->spec & CHAR_SPEC_MISSANIM)
 			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
-		else
-			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+
+		else if (stage.gameboy == 1)
+			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
+
+	    else
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 		Stage_MissNote(this);
 		
-		this->health -= 500;
-		this->score -= 1;
+		this->health -= 2000;
+		this->score -= 100;
 		this->refresh_score = true;
 		
 		#ifdef PSXF_NETWORK
@@ -454,6 +466,9 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 		//Hit the note
 		note->type |= NOTE_FLAG_HIT;
 		
+	   if (stage.gameboy == 1)
+		this->character->set_anim(this->character, note_anims[type & 0x3][1]);
+
 		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 		
 		Stage_StartVocal();
@@ -1512,14 +1527,14 @@ void Stage_Tick(void)
 			case 1056:
 			stage.gameboy = 1;
 			break;
-			case 1260:
+			case 1264:
 			stage.gameboy = 0;
 			break;
-			case 1351:
+			case 1346:
 			stage.gameboy = 1;
 			break;
 			case 1408:
-			stage.gameboy = 1;
+			stage.gameboy = 0;
 			break;
 			}
 
@@ -1728,11 +1743,22 @@ void Stage_Tick(void)
 						{
 							//Opponent hits note
 							Stage_StartVocal();
+		                    if (stage.gameboy == 1)
+							{
+							if (note->type & NOTE_FLAG_SUSTAIN)
+								opponent_snote = note_anims[note->type & 0x3][1];
+							else
+								opponent_anote = note_anims[note->type & 0x3][1];
+							note->type |= NOTE_FLAG_HIT;
+							}
+							else
+							{
 							if (note->type & NOTE_FLAG_SUSTAIN)
 								opponent_snote = note_anims[note->type & 0x3][0];
 							else
 								opponent_anote = note_anims[note->type & 0x3][0];
 							note->type |= NOTE_FLAG_HIT;
+							}
 						}
 					}
 					

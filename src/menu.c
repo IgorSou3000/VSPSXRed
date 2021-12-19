@@ -25,6 +25,8 @@
 #include "character/redm.h"
 #include "character/charm.h"
 
+int slide = 540;
+
 //Menu messages
 static const char *funny_messages[][2] = {
 	{"PSX PORT BY CUCKYDEV", "YOU KNOW IT"},
@@ -302,8 +304,8 @@ void Menu_Load(MenuPage page)
 	FontData_Load(&menu.font_bold, Font_Bold);
 	FontData_Load(&menu.font_arial, Font_Arial);
 	
-	menu.redm = Char_redm_New(FIXED_DEC(0,1), FIXED_DEC(100,1));
-	menu.charm = Char_charm_New(FIXED_DEC(-100,1), FIXED_DEC(100,1));
+	menu.redm = Char_redm_New(FIXED_DEC(0,1), FIXED_DEC(110,1));
+	menu.charm = Char_charm_New(FIXED_DEC(-100,1), FIXED_DEC(110,1));
 	stage.camera.x = stage.camera.y = FIXED_DEC(0,1);
 	stage.camera.bzoom = FIXED_UNIT;
 	stage.gf_speed = 4;
@@ -451,6 +453,7 @@ void Menu_Tick(void)
 	//Fallthrough
 		case MenuPage_Title:
 		{
+			slide = slide - 3;
 			//Initialize page
 			if (menu.page_swap)
 			{
@@ -498,10 +501,10 @@ void Menu_Tick(void)
 			u32 x_rad = (logo_scale * (176 >> 1)) >> FIXED_SHIFT;
 			u32 y_rad = (logo_scale * (112 >> 1)) >> FIXED_SHIFT;
 			
-			RECT logo_src = {0, 0, 176, 112};
+			RECT logo_src = {0, 0, 256, 112};
 			RECT logo_dst = {
-				100 - x_rad + (SCREEN_WIDEADD2 >> 1),
-				68 - y_rad,
+				164 - x_rad + (SCREEN_WIDEADD2 >> 1),
+				slide - y_rad,
 				x_rad << 1,
 				y_rad << 1
 			};
@@ -510,6 +513,9 @@ void Menu_Tick(void)
 			if (menu.page_state.title.logo_bump > 0)
 				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)
 					menu.page_state.title.logo_bump = 0;
+
+			if (slide < 60)
+			    slide = 60;
 			
 			//Draw "Press Start to Begin"
 			if (menu.next_page == menu.page)

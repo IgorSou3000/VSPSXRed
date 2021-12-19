@@ -86,6 +86,24 @@ void Character_CheckEndSing(Character *this)
 	    stage.note_scroll >= this->sing_end)
 		this->set_anim(this, CharAnim_Idle);
 }
+void Character_CheckEndSing2(Character *this)
+{
+	if ((this->animatable.anim == CharAnim_Left ||
+	     this->animatable.anim == CharAnim_LeftAlt ||
+	     this->animatable.anim == CharAnim_Down ||
+	     this->animatable.anim == CharAnim_DownAlt ||
+	     this->animatable.anim == CharAnim_Up ||
+	     this->animatable.anim == CharAnim_UpAlt ||
+	     this->animatable.anim == CharAnim_Right ||
+	     this->animatable.anim == CharAnim_RightAlt ||
+	    ((this->spec & CHAR_SPEC_MISSANIM) &&
+	    (this->animatable.anim == PlayerAnim_LeftMiss ||
+	     this->animatable.anim == PlayerAnim_DownMiss ||
+	     this->animatable.anim == PlayerAnim_UpMiss ||
+	     this->animatable.anim == PlayerAnim_RightMiss))) &&
+	    stage.note_scroll >= this->sing_end)
+		this->set_anim(this, CharAnim_Idle2);
+}
 
 void Character_PerformIdle(Character *this)
 {
@@ -103,5 +121,23 @@ void Character_PerformIdle(Character *this)
 		     this->animatable.anim != CharAnim_RightAlt) &&
 		    (stage.song_step & 0x7) == 0)
 			this->set_anim(this, CharAnim_Idle);
+	}
+}
+void Character_PerformIdle2(Character *this)
+{
+	Character_CheckEndSing2(this);
+	if (stage.flag & STAGE_FLAG_JUST_STEP)
+	{
+		if (Animatable_Ended(&this->animatable) &&
+		    (this->animatable.anim != CharAnim_Left &&
+		     this->animatable.anim != CharAnim_LeftAlt &&
+		     this->animatable.anim != CharAnim_Down &&
+		     this->animatable.anim != CharAnim_DownAlt &&
+		     this->animatable.anim != CharAnim_Up &&
+		     this->animatable.anim != CharAnim_UpAlt &&
+		     this->animatable.anim != CharAnim_Right &&
+		     this->animatable.anim != CharAnim_RightAlt) &&
+		    (stage.song_step & 0x7) == 0)
+			this->set_anim(this, CharAnim_Idle2);
 	}
 }
