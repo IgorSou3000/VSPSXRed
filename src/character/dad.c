@@ -72,7 +72,7 @@ static const CharFrame char_dad_frame[] = {
 	{Dad_ArcMain_Idleb0, {  170,   8, 84, 172}, { 39, 172}}, //2 idle 3
 	{Dad_ArcMain_Idleb1, {1,   6, 85, 174}, { 39, 174}}, //3 idle 4
 	{Dad_ArcMain_Idleb1, {86,   6, 84, 176}, { 39, 176}}, //3 idle 4
-	{Dad_ArcMain_Idleb1, {170,   6, 85, 175}, { 39, 178}}, //3 idle 4
+	{Dad_ArcMain_Idleb1, {170,   6, 85, 175}, { 39, 175}}, //3 idle 4
 
 
 	{Dad_ArcMain_Leftb, {  16,   8,  84, 175}, { 43, 175}}, //4 left 1

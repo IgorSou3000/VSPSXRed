@@ -43,6 +43,11 @@ enum
 	BF_ArcMain_BF3,
 	BF_ArcMain_BF4,
 	BF_ArcMain_Dead0, //BREAK
+	BF_ArcMain_BFB0,
+	BF_ArcMain_BFB1,
+	BF_ArcMain_BFB2,
+	BF_ArcMain_BFB3,
+	BF_ArcMain_BFB4,
 	
 	BF_ArcMain_Max,
 };
@@ -108,32 +113,62 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_BF4, {  9, 136,  118, 107}, { 47, 107}}, //18 right miss 1
 	{BF_ArcMain_BF4, {127, 136, 116, 108}, { 48, 108}}, //19 right miss 2
 
-	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //23 dead0 0
-	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //24 dead0 1
-	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //25 dead0 2
-	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //26 dead0 3
+	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //20 dead0 0
+	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //21 dead0 1
+	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //22 dead0 2
+	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //23 dead0 3
 	
-	{BF_ArcDead_Dead1, {  0,   0, 128, 128}, { 53,  98}}, //27 dead1 0
-	{BF_ArcDead_Dead1, {128,   0, 128, 128}, { 53,  98}}, //28 dead1 1
-	{BF_ArcDead_Dead1, {  0, 128, 128, 128}, { 53,  98}}, //29 dead1 2
-	{BF_ArcDead_Dead1, {128, 128, 128, 128}, { 53,  98}}, //30 dead1 3
+	{BF_ArcDead_Dead1, {  0,   0, 128, 128}, { 53,  98}}, //24 dead1 0
+	{BF_ArcDead_Dead1, {128,   0, 128, 128}, { 53,  98}}, //25 dead1 1
+	{BF_ArcDead_Dead1, {  0, 128, 128, 128}, { 53,  98}}, //26 dead1 2
+	{BF_ArcDead_Dead1, {128, 128, 128, 128}, { 53,  98}}, //27 dead1 3
 	
-	{BF_ArcDead_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //31 dead2 body twitch 0
-	{BF_ArcDead_Dead2, {128,   0, 128, 128}, { 53,  98}}, //32 dead2 body twitch 1
-	{BF_ArcDead_Dead2, {  0, 128, 128, 128}, { 53,  98}}, //33 dead2 balls twitch 0
-	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //34 dead2 balls twitch 1
+	{BF_ArcDead_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //28 dead2 body twitch 0
+	{BF_ArcDead_Dead2, {128,   0, 128, 128}, { 53,  98}}, //29 dead2 body twitch 1
+	{BF_ArcDead_Dead2, {  0, 128, 128, 128}, { 53,  98}}, //30 dead2 balls twitch 0
+	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //31 dead2 balls twitch 1
+
+	{BF_ArcMain_BFB0, {  35,   22, 91, 97}, { 55, 97}},  //0 idle 1
+	{BF_ArcMain_BFB0, {  126,   21, 91, 98}, { 55, 98}},  //1 idle 2
+	{BF_ArcMain_BFB0, {  33,   139, 91, 94}, { 57, 94}},  //2 idle 3
+	{BF_ArcMain_BFB0, {  124,   139, 91, 97}, { 55, 97}},  //3 idle 4
+	
+	{BF_ArcMain_BFB1, {  28,   22, 91, 94}, { 60, 94}},  //4 left 1
+	{BF_ArcMain_BFB1, {  119,   23, 91, 95}, { 60, 95}},  //5 left 2
+	
+	{BF_ArcMain_BFB1, {  38,   146, 91, 90}, { 53, 90}},  //6 down 1
+	{BF_ArcMain_BFB1, {  129,   146, 91, 92}, { 53, 92}},  //7 down 2
+	
+	{BF_ArcMain_BFB2, {  10,   18, 91, 102}, { 55, 102}},  //8 up 1
+	{BF_ArcMain_BFB2, {  128,   20, 91, 100}, { 55, 100}},  //9 up 2
+	
+	{BF_ArcMain_BFB2, {  33,  144, 91, 93}, { 47, 93}},  //10 right 1
+	{BF_ArcMain_BFB2, {  124,   144, 91, 94}, { 48, 94}},  //11 right 2
+	
+	{BF_ArcMain_BFB3, {  26,   26, 97, 91}, { 65, 91}},  //12 left miss 1
+	{BF_ArcMain_BFB3, {  123,   26, 93, 93}, { 62, 93}},  //13 left miss 2
+	
+	{BF_ArcMain_BFB3, {  93,   145, 93, 89}, { 55, 89}},  //14 down miss 1
+	{BF_ArcMain_BFB3, {  132,   145, 91, 91}, { 53, 91}},  //15 down miss 2
+	
+	{BF_ArcMain_BFB4, {  25,   11, 92, 100}, { 56, 100}},  //16 up miss 1
+	{BF_ArcMain_BFB4, {  117,   11, 91, 102}, { 55, 102}},  //17 up miss 2
+	
+	{BF_ArcMain_BFB4, {  29,   147, 94, 92}, { 50, 92}},  //18 right miss 1
+	{BF_ArcMain_BFB4, {  123,   147, 93, 93}, { 49, 93}},  //19 right miss 2
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){ 0,  1,  2,  3,  ASCR_BACK, 1}}, //CharAnim_Idle
 	{2, (const u8[]){ 4,  5, ASCR_BACK, 1}},             //CharAnim_Left
-	{1, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_LeftAlt
+	{2, (const u8[]){36, 37,  ASCR_BACK, 1}},       //CharAnim_LeftAlt
 	{2, (const u8[]){ 6,  7, ASCR_BACK, 1}},             //CharAnim_Down
-	{1, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_DownAlt
+	{2, (const u8[]){38, 39,  ASCR_BACK, 1}},       //CharAnim_DownAlt
 	{2, (const u8[]){ 8,  9, ASCR_BACK, 1}},             //CharAnim_Up
-	{1, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
+	{2, (const u8[]){40, 41,  ASCR_BACK, 1}},          //CharAnim_UpAlt
 	{2, (const u8[]){10, 11, ASCR_BACK, 1}},             //CharAnim_Right
-	{1, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
+	{2, (const u8[]){42, 43,  ASCR_BACK, 1}},         //CharAnim_RightAlt
+	{2, (const u8[]){32, 33, 34, 35,  ASCR_BACK, 1}},
 	
 	{1, (const u8[]){ 4, 12, 12, 13, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){ 6, 14, 14, 15, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
@@ -174,6 +209,9 @@ void Char_BF_Tick(Character *character)
 	Char_BF *this = (Char_BF*)character;
 	
 	//Handle animation updates
+
+	if (stage.gameboy == 1)
+	{
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
 	    (character->animatable.anim != CharAnim_Left &&
 	     character->animatable.anim != CharAnim_LeftAlt &&
@@ -183,11 +221,29 @@ void Char_BF_Tick(Character *character)
 	     character->animatable.anim != CharAnim_UpAlt &&
 	     character->animatable.anim != CharAnim_Right &&
 	     character->animatable.anim != CharAnim_RightAlt))
+		Character_CheckEndSing2(character);
+	}
+
+	else
+	{
+	 if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
+	    (character->animatable.anim != CharAnim_Left &&
+	     character->animatable.anim != CharAnim_LeftAlt &&
+	     character->animatable.anim != CharAnim_Down &&
+	     character->animatable.anim != CharAnim_DownAlt &&
+	     character->animatable.anim != CharAnim_Up &&
+	     character->animatable.anim != CharAnim_UpAlt &&
+	     character->animatable.anim != CharAnim_Right &&
+	     character->animatable.anim != CharAnim_RightAlt))
 		Character_CheckEndSing(character);
+	}
 	
 	if (stage.flag & STAGE_FLAG_JUST_STEP)
 	{
 		//Perform idle dance
+
+		if (stage.gameboy == 1)
+		{
 		if (Animatable_Ended(&character->animatable) &&
 			(character->animatable.anim != CharAnim_Left &&
 		     character->animatable.anim != CharAnim_LeftAlt &&
@@ -202,7 +258,26 @@ void Char_BF_Tick(Character *character)
 		     character->animatable.anim != CharAnim_RightAlt &&
 		     character->animatable.anim != PlayerAnim_RightMiss) &&
 			(stage.song_step & 0x7) == 0)
+			character->set_anim(character, CharAnim_Idle2);
+		}
+		else
+		{
+		 if (Animatable_Ended(&character->animatable) &&
+			(character->animatable.anim != CharAnim_Left &&
+		     character->animatable.anim != CharAnim_LeftAlt &&
+		     character->animatable.anim != PlayerAnim_LeftMiss &&
+		     character->animatable.anim != CharAnim_Down &&
+		     character->animatable.anim != CharAnim_DownAlt &&
+		     character->animatable.anim != PlayerAnim_DownMiss &&
+		     character->animatable.anim != CharAnim_Up &&
+		     character->animatable.anim != CharAnim_UpAlt &&
+		     character->animatable.anim != PlayerAnim_UpMiss &&
+		     character->animatable.anim != CharAnim_Right &&
+		     character->animatable.anim != CharAnim_RightAlt &&
+		     character->animatable.anim != PlayerAnim_RightMiss) &&
+			(stage.song_step & 0x7) == 0)
 			character->set_anim(character, CharAnim_Idle);
+		}
 	
 	}
 	
@@ -401,6 +476,11 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 		"bf3.tim",   //BF_ArcMain_BF3
 		"bf4.tim",   //BF_ArcMain_BF4
 		"dead0.tim", //BF_ArcMain_Dead0
+		"bfb0.tim",   //BF_ArcMain_BF0
+		"bfb1.tim",   //BF_ArcMain_BF1
+		"bfb2.tim",   //BF_ArcMain_BF2
+		"bfb3.tim",   //BF_ArcMain_BF3
+		"bfb4.tim",   //BF_ArcMain_BF4
 		NULL
 	};
 	IO_Data *arc_ptr = this->arc_ptr;
