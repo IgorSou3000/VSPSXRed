@@ -55,7 +55,7 @@ iso/bf/dead.arc: iso/bf/dead1.tim iso/bf/dead2.tim iso/bf/retry.tim
 iso/bf/weeb.arc: iso/bf/weeb0.tim iso/bf/weeb1.tim
 
 # Dad
-iso/dad/main.arc: iso/dad/idle0.tim iso/dad/idle1.tim iso/dad/left.tim iso/dad/down.tim iso/dad/up.tim iso/dad/right.tim
+iso/dad/main.arc: iso/dad/idle0.tim iso/dad/idle1.tim iso/dad/left.tim iso/dad/down.tim iso/dad/up.tim iso/dad/right.tim iso/dad/idleb0.tim iso/dad/idleb1.tim iso/dad/leftb.tim iso/dad/downb.tim iso/dad/upb.tim iso/dad/rightb.tim
 
 iso/menuchar/main.arc: iso/menuchar/idle0.tim iso/menuchar/idle1.tim iso/menuchar/char.tim
 # Spook

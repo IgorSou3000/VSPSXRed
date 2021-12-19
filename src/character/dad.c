@@ -20,6 +20,13 @@ enum
 	Dad_ArcMain_Down,
 	Dad_ArcMain_Up,
 	Dad_ArcMain_Right,
+
+	Dad_ArcMain_Idleb0,
+	Dad_ArcMain_Idleb1,
+	Dad_ArcMain_Leftb,
+	Dad_ArcMain_Downb,
+	Dad_ArcMain_Upb,
+	Dad_ArcMain_Rightb,
 	
 	Dad_Arc_Max,
 };
@@ -55,18 +62,43 @@ static const CharFrame char_dad_frame[] = {
 	
 	{Dad_ArcMain_Right, {  21,   7, 114, 178}, { 45, 178}}, //10 right 1
 	{Dad_ArcMain_Right, {135,   7, 117, 179}, { 45, 179}}, //11 right 2
+
+
+
+
+
+	{Dad_ArcMain_Idleb0, {  1,   8, 84, 175}, { 39, 175}}, //0 idle 1
+	{Dad_ArcMain_Idleb0, {85,   8, 85, 176}, { 39, 176}}, //1 idle 2
+	{Dad_ArcMain_Idleb0, {  170,   8, 84, 172}, { 39, 172}}, //2 idle 3
+	{Dad_ArcMain_Idleb1, {1,   6, 85, 174}, { 39, 174}}, //3 idle 4
+	{Dad_ArcMain_Idleb1, {86,   6, 84, 176}, { 39, 176}}, //3 idle 4
+	{Dad_ArcMain_Idleb1, {170,   6, 85, 175}, { 39, 178}}, //3 idle 4
+
+
+	{Dad_ArcMain_Leftb, {  16,   8,  84, 175}, { 43, 175}}, //4 left 1
+	{Dad_ArcMain_Leftb, {137,   10,  84, 175}, { 42, 175}}, //5 left 2
+	
+	{Dad_ArcMain_Downb, {  23,   21, 98, 156}, { 50, 156}}, //6 down 1
+	{Dad_ArcMain_Downb, {121,   21, 99, 159}, { 51, 159}}, //7 down 2
+	
+	{Dad_ArcMain_Upb, {  20,   3, 116, 184}, { 39, 184}}, //8 up 1
+	{Dad_ArcMain_Upb, {136,   3, 116, 182}, { 39, 182}}, //9 up 2
+	
+	{Dad_ArcMain_Rightb, {  39,   9, 83, 174}, { 37, 174}}, //10 right 1
+	{Dad_ArcMain_Rightb, {122,   9, 83, 173}, { 39, 173}}, //11 right 2
 };
 
 static const Animation char_dad_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 3,  2,  1,  0, ASCR_BACK, 1}}, //CharAnim_Idle
 	{2, (const u8[]){ 5,  4, ASCR_BACK, 1}},         //CharAnim_Left
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_LeftAlt
+	{0, (const u8[]){ 18, 19, ASCR_BACK, 1}},        //CharAnim_LeftAlt
 	{2, (const u8[]){ 7,  6, ASCR_BACK, 1}},         //CharAnim_Down
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_DownAlt
+	{0, (const u8[]){ 20, 21, ASCR_BACK, 1}},   //CharAnim_DownAlt
 	{2, (const u8[]){ 9,  8, ASCR_BACK, 1}},         //CharAnim_Up
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_UpAlt
+	{0, (const u8[]){ 22, 23, ASCR_BACK, 1}},   //CharAnim_UpAlt
 	{2, (const u8[]){11, 10, ASCR_BACK, 1}},         //CharAnim_Right
-	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_RightAlt
+	{0, (const u8[]){ 24, 25, ASCR_BACK, 1}},   //CharAnim_RightAlt
+	{2, (const u8[]){ 12,  13,  14,  15,  16,  17, ASCR_BACK, 1}}, //CharAnim_Idleb
 };
 
 //Dad character functions
@@ -150,6 +182,12 @@ Character *Char_Dad_New(fixed_t x, fixed_t y)
 		"down.tim",  //Dad_ArcMain_Down
 		"up.tim",    //Dad_ArcMain_Up
 		"right.tim", //Dad_ArcMain_Right
+		"idleb0.tim", //Dad_ArcMain_Idle0
+		"idleb1.tim", //Dad_ArcMain_Idle1
+		"leftb.tim",  //Dad_ArcMain_Left
+		"downb.tim",  //Dad_ArcMain_Down
+		"upb.tim",    //Dad_ArcMain_Up
+		"rightb.tim", //Dad_ArcMain_Right
 		NULL
 	};
 	IO_Data *arc_ptr = this->arc_ptr;
