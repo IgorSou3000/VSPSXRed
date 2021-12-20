@@ -122,11 +122,6 @@ void Char_Dad_Tick(Character *character)
 	
 	//Perform idle dance
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
-
-	   if (stage.gameboy == 1)
-		Character_PerformIdle2(character);
-
-	   else
 	    Character_PerformIdle(character);
 	
 	//Animate and draw

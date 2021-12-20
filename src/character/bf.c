@@ -210,22 +210,7 @@ void Char_BF_Tick(Character *character)
 	
 	//Handle animation updates
 
-	if (stage.gameboy == 1)
-	{
-	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
-	    (character->animatable.anim != CharAnim_Left &&
-	     character->animatable.anim != CharAnim_LeftAlt &&
-	     character->animatable.anim != CharAnim_Down &&
-	     character->animatable.anim != CharAnim_DownAlt &&
-	     character->animatable.anim != CharAnim_Up &&
-	     character->animatable.anim != CharAnim_UpAlt &&
-	     character->animatable.anim != CharAnim_Right &&
-	     character->animatable.anim != CharAnim_RightAlt))
-		Character_CheckEndSing2(character);
-	}
 
-	else
-	{
 	 if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
 	    (character->animatable.anim != CharAnim_Left &&
 	     character->animatable.anim != CharAnim_LeftAlt &&
@@ -236,14 +221,11 @@ void Char_BF_Tick(Character *character)
 	     character->animatable.anim != CharAnim_Right &&
 	     character->animatable.anim != CharAnim_RightAlt))
 		Character_CheckEndSing(character);
-	}
+
 	
 	if (stage.flag & STAGE_FLAG_JUST_STEP)
 	{
 		//Perform idle dance
-
-		if (stage.gameboy == 1)
-		{
 		if (Animatable_Ended(&character->animatable) &&
 			(character->animatable.anim != CharAnim_Left &&
 		     character->animatable.anim != CharAnim_LeftAlt &&
@@ -258,28 +240,8 @@ void Char_BF_Tick(Character *character)
 		     character->animatable.anim != CharAnim_RightAlt &&
 		     character->animatable.anim != PlayerAnim_RightMiss) &&
 			(stage.song_step & 0x7) == 0)
-			character->set_anim(character, CharAnim_Idle2);
+			character->set_anim(character, (stage.gameboy == 1) ? CharAnim_Idle2 : CharAnim_Idle);
 		}
-		else
-		{
-		 if (Animatable_Ended(&character->animatable) &&
-			(character->animatable.anim != CharAnim_Left &&
-		     character->animatable.anim != CharAnim_LeftAlt &&
-		     character->animatable.anim != PlayerAnim_LeftMiss &&
-		     character->animatable.anim != CharAnim_Down &&
-		     character->animatable.anim != CharAnim_DownAlt &&
-		     character->animatable.anim != PlayerAnim_DownMiss &&
-		     character->animatable.anim != CharAnim_Up &&
-		     character->animatable.anim != CharAnim_UpAlt &&
-		     character->animatable.anim != PlayerAnim_UpMiss &&
-		     character->animatable.anim != CharAnim_Right &&
-		     character->animatable.anim != CharAnim_RightAlt &&
-		     character->animatable.anim != PlayerAnim_RightMiss) &&
-			(stage.song_step & 0x7) == 0)
-			character->set_anim(character, CharAnim_Idle);
-		}
-	
-	}
 	
 	//Retry screen
 	if (character->animatable.anim >= PlayerAnim_Dead3)

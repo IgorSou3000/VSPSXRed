@@ -30,41 +30,11 @@ int slide = 540;
 //Menu messages
 static const char *funny_messages[][2] = {
 	{"PSX PORT BY CUCKYDEV", "YOU KNOW IT"},
-	{"PORTED BY CUCKYDEV", "WHAT YOU GONNA DO"},
-	{"FUNKIN", "FOREVER"},
-	{"WHAT THE HELL", "RITZ PSX"},
-	{"LIKE PARAPPA", "BUT COOLER"},
-	{"THE JAPI", "EL JAPI"},
-	{"PICO FUNNY", "PICO FUNNY"},
-	{"OPENGL BACKEND", "BY CLOWNACY"},
-	{"CUCKYFNF", "SETTING STANDARDS"},
-	{"lool", "inverted colours"},
-	{"NEVER LOOK AT", "THE ISSUE TRACKER"},
-	{"PSXDEV", "HOMEBREW"},
-	{"ZERO POINT ZERO TWO TWO EIGHT", "ONE FIVE NINE ONE ZERO FIVE"},
-	{"DOPE ASS GAME", "PLAYSTATION MAGAZINE"},
-	{"NEWGROUNDS", "FOREVER"},
-	{"NO FPU", "NO PROBLEM"},
-	{"OK OKAY", "WATCH THIS"},
-	{"ITS MORE MALICIOUS", "THAN ANYTHING"},
-	{"USE A CONTROLLER", "LOL"},
-	{"SNIPING THE KICKSTARTER", "HAHA"},
-	{"SHITS UNOFFICIAL", "NOT A PROBLEM"},
-	{"SYSCLK", "RANDOM SEED"},
-	{"THEY DIDNT HIT THE GOAL", "STOP"},
-	{"FCEFUWEFUETWHCFUEZDSLVNSP", "PQRYQWENQWKBVZLZSLDNSVPBM"},
-	{"THE FLOORS ARE", "THREE DIMENSIONAL"},
-	{"PSXFUNKIN BY CUCKYDEV", "SUCK IT DOWN"},
-	{"PLAYING ON EPSXE HUH", "YOURE THE PROBLEM"},
-	{"NEXT IN LINE", "ATARI"},
-	{"HAXEFLIXEL", "COME ON"},
-	{"HAHAHA", "I DONT CARE"},
-	{"GET ME TO STOP", "TRY"},
-	{"FNF MUKBANG GIF", "THATS UNRULY"},
-	{"OPEN SOURCE", "FOREVER"},
-	{"ITS A PORT", "ITS WORSE"},
-	{"WOW GATO", "WOW GATO"},
-	{"BALLS FISH", "BALLS FISH"},
+	{"WHAT HELL", "POKEMON IN A PSX"},
+	{"WHO IS THAT", "POKEMON"},
+	{"POKEMON RED", "NOT FIRE RED DUMBASS"},
+	{"CHARIZARD", "BEST POKEMON"},
+	{"PIKACHU OF ASH", "IS THE STRONGEST POKEMON"},
 };
 
 #ifdef PSXF_NETWORK
@@ -137,7 +107,7 @@ static struct
 	} page_param;
 	
 	//Menu assets
-	Gfx_Tex tex_back, tex_ng, tex_story, tex_title;
+	Gfx_Tex tex_game, tex_ng, tex_story, tex_title;
 	FontData font_bold, font_arial;
 	
 	Character *redm; //Title Girlfriend
@@ -209,16 +179,6 @@ static const char *Menu_LowerIf(const char *text, boolean lower)
 	return menu_text_buffer;
 }
 
-static void Menu_DrawBack(boolean flash, s32 scroll, u8 r0, u8 g0, u8 b0, u8 r1, u8 g1, u8 b1)
-{
-	RECT back_src = {0, 0, 255, 255};
-	RECT back_dst = {0, -scroll - SCREEN_WIDEADD2, SCREEN_WIDTH, SCREEN_WIDTH * 4 / 5};
-	
-	if (flash || (animf_count & 4) == 0)
-		Gfx_DrawTexCol(&menu.tex_back, &back_src, &back_dst, r0, g0, b0);
-	else
-		Gfx_DrawTexCol(&menu.tex_back, &back_src, &back_dst, r1, g1, b1);
-}
 
 static void Menu_DifficultySelector(s32 x, s32 y)
 {
@@ -295,7 +255,7 @@ void Menu_Load(MenuPage page)
 {
 	//Load menu assets
 	IO_Data menu_arc = IO_Read("\\MENU\\MENU.ARC;1");
-	Gfx_LoadTex(&menu.tex_back,  Archive_Find(menu_arc, "back.tim"),  0);
+	Gfx_LoadTex(&menu.tex_game,  Archive_Find(menu_arc, "gameboi.tim"),  0);
 	Gfx_LoadTex(&menu.tex_ng,    Archive_Find(menu_arc, "ng.tim"),    0);
 	Gfx_LoadTex(&menu.tex_story, Archive_Find(menu_arc, "story.tim"), 0);
 	Gfx_LoadTex(&menu.tex_title, Archive_Find(menu_arc, "title.tim"), 0);
@@ -312,6 +272,8 @@ void Menu_Load(MenuPage page)
 	
 	//Initialize menu state
 	menu.select = menu.next_select = 0;
+
+	
 	
 	switch (menu.page = menu.next_page = page)
 	{
@@ -339,7 +301,7 @@ void Menu_Load(MenuPage page)
 	Audio_WaitPlayXA();
 	
 	//Set background colour
-	Gfx_SetClear(255, 255, 255);
+	Gfx_SetClear (0, 0, 0 );
 }
 
 void Menu_Unload(void)
@@ -390,7 +352,7 @@ void Menu_Tick(void)
 			u16 beat = stage.song_step >> 2;
 			
 			//Start title screen if opening ended
-			if (beat >= 16)
+			if (beat >= 20)
 			{
 				menu.page = menu.next_page = MenuPage_Title;
 				menu.page_swap = true;
@@ -409,14 +371,12 @@ void Menu_Tick(void)
 				switch (beat)
 				{
 					case 3:
-						menu.font_bold.draw(&menu.font_bold, "PRESENT", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 32, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "PRESENT", SCREEN_WIDTH2, SCREEN_HEIGHT2, FontAlign_Center);
 				//Fallthrough
 					case 2:
 					case 1:
-						menu.font_bold.draw(&menu.font_bold, "NINJAMUFFIN",   SCREEN_WIDTH2, SCREEN_HEIGHT2 - 32, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "PHANTOMARCADE", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "KAWAISPRITE",   SCREEN_WIDTH2, SCREEN_HEIGHT2,      FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "EVILSKER",      SCREEN_WIDTH2, SCREEN_HEIGHT2 + 16, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "IGORSOU", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 32, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "UNSTOPABLE", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
 						break;
 					
 					case 7:
@@ -436,15 +396,21 @@ void Menu_Tick(void)
 					case 9:
 						menu.font_bold.draw(&menu.font_bold, funny_message[0], SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
 						break;
-					
+                    
+					case 20:
+                    case 19:
+					case 18:
+					  menu.font_bold.draw(&menu.font_bold, "RED VERSION", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 24, FontAlign_Center);
+					case 17:
+					case 16:
 					case 15:
-						menu.font_bold.draw(&menu.font_bold, "FUNKIN", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "TRAINER", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
 				//Fallthrough
 					case 14:
-						menu.font_bold.draw(&menu.font_bold, "NIGHT", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "POKEMON", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
 				//Fallthrough
 					case 13:
-						menu.font_bold.draw(&menu.font_bold, "FRIDAY", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "VS", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
 						break;
 				}
 				break;
@@ -453,6 +419,8 @@ void Menu_Tick(void)
 	//Fallthrough
 		case MenuPage_Title:
 		{
+			Gfx_SetClear(255, 255, 255);
+			
 			slide = slide - 3;
 			//Initialize page
 			if (menu.page_swap)
@@ -543,6 +511,8 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Main:
 		{
+
+			Gfx_SetClear(255, 255, 255);
 			static const char *menu_options[] = {
 				"NEW GAME",
 				"MODS",
@@ -661,18 +631,6 @@ void Menu_Tick(void)
 					FontAlign_Center
 				);
 			}
-			
-			//Draw background
-			Menu_DrawBack(
-				menu.next_page == menu.page || menu.next_page == MenuPage_Title,
-			#ifndef PSXF_NETWORK
-				menu.scroll >> (FIXED_SHIFT + 1),
-			#else
-				menu.scroll >> (FIXED_SHIFT + 3),
-			#endif
-				253 >> 1, 231 >> 1, 113 >> 1,
-				253 >> 1, 113 >> 1, 155 >> 1
-			);
 			break;
 		}
 		case MenuPage_Story:
@@ -921,14 +879,6 @@ void Menu_Tick(void)
 			menu.page_state.freeplay.back_g += (tgt_g - menu.page_state.freeplay.back_g) >> 4;
 			menu.page_state.freeplay.back_b += (tgt_b - menu.page_state.freeplay.back_b) >> 4;
 			
-			Menu_DrawBack(
-				true,
-				8,
-				menu.page_state.freeplay.back_r >> (FIXED_SHIFT + 1),
-				menu.page_state.freeplay.back_g >> (FIXED_SHIFT + 1),
-				menu.page_state.freeplay.back_b >> (FIXED_SHIFT + 1),
-				0, 0, 0
-			);
 			break;
 		}
 		case MenuPage_Mods:
@@ -1025,13 +975,6 @@ void Menu_Tick(void)
 				);
 			}
 			
-			//Draw background
-			Menu_DrawBack(
-				true,
-				8,
-				197 >> 1, 240 >> 1, 95 >> 1,
-				0, 0, 0
-			);
 			break;
 		}
 		case MenuPage_Options:
@@ -1154,13 +1097,6 @@ void Menu_Tick(void)
 				);
 			}
 			
-			//Draw background
-			Menu_DrawBack(
-				true,
-				8,
-				253 >> 1, 113 >> 1, 155 >> 1,
-				0, 0, 0
-			);
 			break;
 		}
 	#ifdef PSXF_NETWORK

@@ -118,9 +118,9 @@ int main(int argc, char *argv[])
 			new_note.type = (uint8_t)j[1] & (3 | NOTE_FLAG_OPPONENT);
 			if (is_opponent)
 				new_note.type ^= NOTE_FLAG_OPPONENT;
-			if (j[3] == 2)
-				new_note.type |= NOTE_FLAG_THUNDER;
 			if (j[3] == 3)
+				new_note.type |= NOTE_FLAG_THUNDER;
+			if (j[3] == 2)
 				new_note.type |= NOTE_FLAG_FIRE;
 			if (sustain >= 0)
 				new_note.type |= NOTE_FLAG_SUSTAIN_END;

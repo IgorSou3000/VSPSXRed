@@ -27,6 +27,8 @@ int thundercooldown = 0;
 int thunder = 0;
 int flamecooldown = 0;
 int flame = 0;
+int swap = 0;
+int swapcooldown = -1;
 
 
 //Stage constants
@@ -50,6 +52,7 @@ static const fixed_t note_x[8] = {
 static const fixed_t note_y = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
 
 static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
+
 static const u8 note_anims[4][3] = {
 	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
 	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
@@ -323,10 +326,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			//Hit the note
 			note->type |= NOTE_FLAG_HIT;
 			
-			 if (stage.gameboy == 1)
-			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
-	        else
-	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
 
 			u8 hit_type = Stage_HitNote(this, type, stage.note_scroll - note_fp);
 			this->arrow_hitan[type & 0x3] = stage.step_time;
@@ -377,11 +377,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			
 			stage.thunderbolt = 1;
 
-		    if (stage.gameboy == 1)
-			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
-
-	       else
-	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
 
 			this->arrow_hitan[type & 0x3] = -1;
 			
@@ -431,11 +427,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			    stage.flame = 1;
 				this->health -= 3500;
 
-             if (stage.gameboy == 1)
-			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
-
-	       else
-	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
 
 			this->arrow_hitan[type & 0x3] = -1;
 			
@@ -477,11 +469,9 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 		if (this->character->spec & CHAR_SPEC_MISSANIM)
 			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
 
-		else if (stage.gameboy == 1)
-			this->character->set_anim(this->character, note_anims[type & 0x3][1]);
-
 	    else
-	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
+
 		Stage_MissNote(this);
 		
 		this->health -= 2000;
@@ -524,11 +514,7 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 		//Hit the note
 		note->type |= NOTE_FLAG_HIT;
 		
-	   if (stage.gameboy == 1)
-		this->character->set_anim(this->character, note_anims[type & 0x3][1]);
-
-		else
-		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+		this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
 		
 		Stage_StartVocal();
 		this->arrow_hitan[type & 0x3] = stage.step_time;
@@ -568,6 +554,7 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 	#ifndef STAGE_PERFECT
 		if (playing)
 		{
+			
 			u8 i = (this->character == stage.opponent) ? NOTE_FLAG_OPPONENT : 0;
 			
 			this->pad_held = this->character->pad_held = pad->held;
@@ -590,7 +577,9 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 				Stage_NoteCheck(this, 2 | i);
 			if (this->pad_press & INPUT_RIGHT)
 				Stage_NoteCheck(this, 3 | i);
+		
 		}
+
 		else
 		{
 			this->pad_held = this->character->pad_held = 0;
@@ -637,11 +626,13 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			//Handle input
 			this->pad_held = 0;
 			this->pad_press = 0;
-			
+
+
 			for (u8 j = 0; j < 4; j++)
 			{
 				if (hit[j] & 5)
 				{
+					
 					this->pad_held |= note_key[j];
 					Stage_SustainCheck(this, j | i);
 				}
@@ -1282,6 +1273,7 @@ static void Stage_LoadState(void)
 		stage.player_state[i].health = 20000;
 		stage.player_state[i].combo = 0;
 		stage.gameboy = 0;
+		swap = 0;
 		
 		stage.player_state[i].refresh_score = false;
 		stage.player_state[i].score = 0;
@@ -1571,6 +1563,13 @@ void Stage_Tick(void)
 			else
 			  bfnotex = 0;
 
+			if (stage.gameboy == 1)
+			{
+			 swap = 1;
+			}
+			else
+			 swap = 0;
+
 			switch(stage.song_step)
 			{
 			case 511:
@@ -1579,22 +1578,16 @@ void Stage_Tick(void)
 			case 574:
 			stage.gameboy = 0;
 			break;
-			case 641:
+			case 642:
 			stage.gameboy = 1;
 			break;
-			case 703:
+			case 704:
 			stage.gameboy = 0;
 			break;
-			case 1055:
+			case 1056:
 			stage.gameboy = 1;
 			break;
-			case 1264:
-			stage.gameboy = 0;
-			break;
-			case 1347:
-			stage.gameboy = 1;
-			break;
-			case 1408:
+			case 1271:
 			stage.gameboy = 0;
 			break;
 			}
@@ -1845,22 +1838,15 @@ void Stage_Tick(void)
 						{
 							//Opponent hits note
 							Stage_StartVocal();
-		                    if (stage.gameboy == 1)
-							{
+		                
 							if (note->type & NOTE_FLAG_SUSTAIN)
-								opponent_snote = note_anims[note->type & 0x3][1];
+								opponent_snote = note_anims[note->type & 0x3][swap];
 							else
-								opponent_anote = note_anims[note->type & 0x3][1];
+								opponent_anote = note_anims[note->type & 0x3][swap];
 							note->type |= NOTE_FLAG_HIT;
-							}
-							else
-							{
-							if (note->type & NOTE_FLAG_SUSTAIN)
-								opponent_snote = note_anims[note->type & 0x3][0];
-							else
-								opponent_anote = note_anims[note->type & 0x3][0];
-							note->type |= NOTE_FLAG_HIT;
-							}
+
+					
+						
 						}
 					}
 					
