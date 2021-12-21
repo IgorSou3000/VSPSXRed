@@ -22,13 +22,11 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
-int bfnotex = 0;
+int bfnotex, swap;
 int thundercooldown = 0;
 int thunder = 0;
 int flamecooldown = 0;
 int flame = 0;
-int swap = 0;
-int swapcooldown = -1;
 
 
 //Stage constants
@@ -1495,7 +1493,10 @@ void Stage_Tick(void)
 				{
 					if (stage.stage_id <= StageId_LastVanilla)
 					{
-						if (stage.story)
+						if (stage.stage_id == StageId_1_1)
+							Menu_Load(MenuPage_Credits);
+
+						else if (stage.story)
 							Menu_Load(MenuPage_Main);
 						else
 							Menu_Load(MenuPage_Freeplay);
@@ -1564,8 +1565,8 @@ void Stage_Tick(void)
 			  bfnotex = 0;
 
 			if (stage.gameboy == 1)
-			{
-			 swap = 1;
+			{	
+			  swap = 1;
 			}
 			else
 			 swap = 0;

@@ -26,6 +26,7 @@
 #include "character/charm.h"
 
 int slide = 540;
+int cre;
 
 //Menu messages
 static const char *funny_messages[][2] = {
@@ -107,7 +108,7 @@ static struct
 	} page_param;
 	
 	//Menu assets
-	Gfx_Tex tex_game, tex_ng, tex_story, tex_title;
+	Gfx_Tex tex_game, tex_ng, tex_story, tex_title, tex_cre0, tex_cre1, tex_cre2,tex_cre3;
 	FontData font_bold, font_arial;
 	
 	Character *redm; //Title Girlfriend
@@ -259,6 +260,10 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_ng,    Archive_Find(menu_arc, "ng.tim"),    0);
 	Gfx_LoadTex(&menu.tex_story, Archive_Find(menu_arc, "story.tim"), 0);
 	Gfx_LoadTex(&menu.tex_title, Archive_Find(menu_arc, "title.tim"), 0);
+	Gfx_LoadTex(&menu.tex_cre0, Archive_Find(menu_arc, "cre0.tim"), 0);
+	Gfx_LoadTex(&menu.tex_cre1, Archive_Find(menu_arc, "cre1.tim"), 0);
+	Gfx_LoadTex(&menu.tex_cre2, Archive_Find(menu_arc, "cre2.tim"), 0);
+	Gfx_LoadTex(&menu.tex_cre3, Archive_Find(menu_arc, "cre3.tim"), 0);
 	Mem_Free(menu_arc);
 	
 	FontData_Load(&menu.font_bold, Font_Bold);
@@ -297,7 +302,13 @@ void Menu_Load(MenuPage page)
 	stage.song_step = 0;
 	
 	//Play menu music
+	if (menu.page == MenuPage_Credits)
+	Audio_PlayXA_Track(XA_Fresh, 0x40, 2, 0);
+    
+	else
 	Audio_PlayXA_Track(XA_GettinFreaky, 0x40, 0, 1);
+
+
 	Audio_WaitPlayXA();
 	
 	//Set background colour
@@ -484,25 +495,6 @@ void Menu_Tick(void)
 
 			if (slide < 60)
 			    slide = 60;
-			
-			//Draw "Press Start to Begin"
-			if (menu.next_page == menu.page)
-			{
-				//Blinking blue
-				s16 press_lerp = (MUtil_Cos(animf_count << 3) + 0x100) >> 1;
-				u8 press_r = 51 >> 1;
-				u8 press_g = (58  + ((press_lerp * (255 - 58))  >> 8)) >> 1;
-				u8 press_b = (206 + ((press_lerp * (255 - 206)) >> 8)) >> 1;
-				
-				RECT press_src = {0, 112, 256, 32};
-				Gfx_BlitTexCol(&menu.tex_title, &press_src, (SCREEN_WIDTH - 256) / 2, SCREEN_HEIGHT - 48, press_r, press_g, press_b);
-			}
-			else
-			{
-				//Flash white
-				RECT press_src = {0, (animf_count & 1) ? 144 : 112, 256, 32};
-				Gfx_BlitTex(&menu.tex_title, &press_src, (SCREEN_WIDTH - 256) / 2, SCREEN_HEIGHT - 48);
-			}
 			
 			//Draw Girlfriend
 			menu.redm->tick(menu.redm);
@@ -703,7 +695,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					menu.next_page = MenuPage_Main;
-					menu.next_select = 0; //Story Mode
+					menu.next_select = 1; //Story Mode
 					Trans_Start();
 				}
 			}
@@ -1099,6 +1091,47 @@ void Menu_Tick(void)
 			
 			break;
 		}
+		case MenuPage_Credits:
+		{
+			cre--;
+
+			if (stage.song_step >= 126) 
+			{
+			   menu.redm->tick(menu.redm);
+			   menu.charm->tick(menu.charm);
+			   Gfx_SetClear(255,255,255);
+			}
+
+			if (menu.page != MenuPage_Credits)
+			   cre;
+
+			
+
+			if (stage.song_step >= 134  || ((pad_state.press & PAD_START)))
+			{
+					menu.next_page = MenuPage_Main;
+					menu.next_select = 0; //Freeplay
+					Trans_Start();	
+			}
+				   
+	           //Draw different text depending on beat
+				RECT src_cre = {0, 0, 256, 256};
+
+				Gfx_BlitTex(&menu.tex_cre0, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 - 16 + cre);
+				Gfx_BlitTex(&menu.tex_cre1, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 240 + cre);
+				Gfx_BlitTex(&menu.tex_cre2, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 496 + cre);
+				Gfx_BlitTex(&menu.tex_cre3, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 752 + cre);
+
+				if (pad_state.held & PAD_DOWN)
+				   cre--;
+
+				if (pad_state.held & PAD_START)
+					menu.page = menu.next_page = MenuPage_Main;
+
+				break;
+		}
+
+
 	#ifdef PSXF_NETWORK
 		case MenuPage_NetHost:
 		{

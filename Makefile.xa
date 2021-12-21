@@ -10,4 +10,4 @@ iso/music/%.xa:
 
 # XA interleaves
 iso/music/menu.xa: iso/music/freaky.xa iso/music/gameover.xa
-iso/music/week1a.xa: iso/music/bopeeboi.xa iso/music/bopeebov.xa iso/music/freshi.xa iso/music/freshv.xa
+iso/music/week1a.xa: iso/music/bopeeboi.xa iso/music/bopeebov.xa iso/music/freshv.xa iso/music/freshv.xa

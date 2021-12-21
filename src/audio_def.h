@@ -12,7 +12,7 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_Menu, XA_LENGTH(3840)},  //XA_GameOver
 	//WEEK1A.XA
 	{XA_Week1A, XA_LENGTH(13500)}, //XA_Bopeebo
-	{XA_Week1A, XA_LENGTH(8000)}, //XA_Fresh
+	{XA_Week1A, XA_LENGTH(25100)}, //XA_Fresh
 };
 
 static const char *xa_paths[] = {
@@ -33,7 +33,7 @@ static const XA_Mp3 xa_mp3s[] = {
 	{"gameover", false}, //XA_GameOver
 	//WEEK1A.XA
 	{"bopeebo", true}, //XA_Bopeebo
-	{"fresh", true},   //XA_Fresh
+	{"fresh", false},   //XA_Fresh
 	//WEEK1B.XA
 	{"dadbattle", true}, //XA_Dadbattle
 	{"tutorial", false}, //XA_Tutorial
