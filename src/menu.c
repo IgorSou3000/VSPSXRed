@@ -1087,6 +1087,7 @@ void Menu_Tick(void)
 						break;
 				}
 				
+				
 				//Return to main menu if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
