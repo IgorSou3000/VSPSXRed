@@ -93,10 +93,10 @@ static const CharFrame char_frame[] = {
 	{4, {6,   18, 246, 194}, { 96,  194}}, //5 right 1
 	{5, {27,   9, 206, 204}, { 74,  204}}, //5 attac
 
-	{6, {0,     0,  160, 160}, { 69, 86}}, 
-	{7, {0,     0,  160, 160}, { 69, 86}}, 
-	{8, {0,     0,  160, 160}, { 69, 86}},
-	{9, {0,     0,  160, 160}, { 69, 86}},  
+	{6, {4,     3,  151, 151}, { 140, 151}}, 
+    {7, {5,     0,  151, 154}, { 139, 154}}, 
+    {8, {1,     7,  155, 147}, { 144, 147}},
+    {9, {5,     2,  151, 153}, { 140, 153}},
 };
 
 static const Animation char_anim[] = {
@@ -219,7 +219,7 @@ void Back_Week1_DrawBG(StageBack *back)
 	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(60,1) - fy);
 
 	if (stage.gameboy == 1)
-    	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(10,1) - fy);
+    	Week1_Char_Draw(this, FIXED_DEC(156,1) - fx, FIXED_DEC(60,1) - fy);
 
 
 
