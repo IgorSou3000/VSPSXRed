@@ -108,7 +108,7 @@ static struct
 	} page_param;
 	
 	//Menu assets
-	Gfx_Tex tex_game, tex_ng, tex_story, tex_title, tex_cre0, tex_cre1, tex_cre2,tex_cre3,tex_cre4;
+	Gfx_Tex tex_back, tex_game, tex_ng, tex_story, tex_title, tex_cre0, tex_cre1, tex_cre2,tex_cre3,tex_cre4;
 	FontData font_bold, font_arial;
 	
 	Character *redm; //Title Girlfriend
@@ -152,6 +152,7 @@ char menu_text_buffer[0x100];
 
 static const char *Menu_LowerIf(const char *text, boolean lower)
 {
+
 	//Copy text
 	char *dstp = menu_text_buffer;
 	if (lower)
@@ -174,10 +175,20 @@ static const char *Menu_LowerIf(const char *text, boolean lower)
 				*dstp++ = *srcp;
 		}
 	}
-	
 	//Terminate text
 	*dstp++ = '\0';
 	return menu_text_buffer;
+}
+
+static void Menu_DrawBack(boolean flash, s32 scroll, u8 r0, u8 g0, u8 b0, u8 r1, u8 g1, u8 b1)
+{
+	RECT back_src = {0, 0, 255, 154};
+	RECT back_dst = {0,  - SCREEN_WIDEADD2, SCREEN_WIDTH, SCREEN_WIDTH * 4 / 5- 20};
+	
+	if (flash || (animf_count & 4) == 0)
+		Gfx_DrawTexCol(&menu.tex_back, &back_src, &back_dst, r0, g0, b0);
+	else
+		Gfx_DrawTexCol(&menu.tex_back, &back_src, &back_dst, r1, g1, b1);
 }
 
 
@@ -265,6 +276,7 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_cre2, Archive_Find(menu_arc, "cre2.tim"), 0);
 	Gfx_LoadTex(&menu.tex_cre3, Archive_Find(menu_arc, "cre3.tim"), 0);
 	Gfx_LoadTex(&menu.tex_cre4, Archive_Find(menu_arc, "cre4.tim"), 0);
+	Gfx_LoadTex(&menu.tex_back,  Archive_Find(menu_arc, "back.tim"),  0);
 	Mem_Free(menu_arc);
 	
 	FontData_Load(&menu.font_bold, Font_Bold);
@@ -516,11 +528,40 @@ void Menu_Tick(void)
 			if (cre == 700)
 			    cre = 0;
 
+				RECT src_game0 = {0,127, 203, 23};
+	            RECT src_game1 = {0,85, 202, 22};
+	            RECT src_game0a2 = {0,150, 202, 22};
+	            RECT src_game1a2 = {0,107, 202, 20};
+
+			if (menu.next_page == menu.page || menu.next_page == MenuPage_Title)
+			{
+			  if (menu.select == 0)
+	       {
+	        Gfx_BlitTex(&menu.tex_game, &src_game0, (SCREEN_WIDTH - 286) >> 1, SCREEN_HEIGHT2 - 60);
+	        Gfx_BlitTex(&menu.tex_game, &src_game1a2, (SCREEN_WIDTH - 286) >> 1, SCREEN_HEIGHT2);
+	       }
+
+	        else if (menu.select == 1)
+	      {
+	       Gfx_BlitTex(&menu.tex_game, &src_game0a2, (SCREEN_WIDTH - 286) >> 1, SCREEN_HEIGHT2 - 60);
+	       Gfx_BlitTex(&menu.tex_game, &src_game1, (SCREEN_WIDTH - 286) >> 1, SCREEN_HEIGHT2);
+	      }
+			}
+
+		else if (animf_count & 2)
+        {
+			if (menu.select == 0)
+			 Gfx_BlitTex(&menu.tex_game, &src_game0, (SCREEN_WIDTH - 286) >> 1, SCREEN_HEIGHT2 - 60);
+
+			 else if (menu.select == 1)
+			 Gfx_BlitTex(&menu.tex_game, &src_game1, (SCREEN_WIDTH - 286) >> 1, SCREEN_HEIGHT2);
+		}
+
+
 			Gfx_SetClear(255, 255, 255);
 			static const char *menu_options[] = {
-				"NEW GAME",
-				"MODS",
-				"OPTIONS",
+				"",
+				"",
 				#ifdef PSXF_NETWORK
 					"JOIN SERVER",
 					"HOST SERVER",
@@ -576,17 +617,14 @@ void Menu_Tick(void)
 							menu.page_param.stage.diff = StageDiff_Hard;
 				            }
 							break;
-						case 1: //Mods
-							menu.next_page = MenuPage_Mods;
-							break;
-						case 2: //Options
+						case 1: //Options
 							menu.next_page = MenuPage_Options;
 							break;
 					#ifdef PSXF_NETWORK
-						case 3: //Join Server
+						case 2: //Join Server
 							menu.next_page = Network_Inited() ? MenuPage_NetJoin : MenuPage_NetInitFail;
 							break;
-						case 4: //Host Server
+						case 3: //Host Server
 							menu.next_page = Network_Inited() ? MenuPage_NetHost : MenuPage_NetInitFail;
 							break;
 					#endif
@@ -635,6 +673,17 @@ void Menu_Tick(void)
 					FontAlign_Center
 				);
 			}
+			//Draw background
+			Menu_DrawBack(
+				menu.next_page == menu.page || menu.next_page == MenuPage_Title,
+			#ifndef PSXF_NETWORK
+				menu.scroll >> (FIXED_SHIFT + 1),
+			#else
+				menu.scroll >> (FIXED_SHIFT + 3),
+			#endif
+				253 >> 1, 253 >> 1, 253 >> 1,
+				253 >> 1, 253 >> 1, 253 >> 1
+			);
 			break;
 		}
 		case MenuPage_Story:
@@ -930,7 +979,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					menu.next_page = MenuPage_Main;
-					menu.next_select = 2; //Mods
+					menu.next_select = 1; //Mods
 					Trans_Start();
 				}
 			}
@@ -1042,7 +1091,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					menu.next_page = MenuPage_Main;
-					menu.next_select = 2; //Options
+					menu.next_select = 1; //Options
 					Trans_Start();
 				}
 			}
