@@ -5,8 +5,11 @@
 */
 
 #include "animation.h"
+#include "stage.h"
 
 #include "timer.h"
+
+int wait;
 
 //Animation functions
 void Animatable_Init(Animatable *this, const Animation *anims)
@@ -23,10 +26,12 @@ void Animatable_SetAnim(Animatable *this, u8 anim)
 	this->anim_spd = FIXED_DEC(this->anims[anim].spd,1) / 24;
 	this->anim_time = 0;
 	this->ended = false;
+
 }
 
 void Animatable_Animate(Animatable *this, void *user, void (*set_frame)(void*, u8))
 {
+
 	//Wait for time
 	while (this->anim_time <= 0)
 	{
@@ -55,7 +60,9 @@ void Animatable_Animate(Animatable *this, void *user, void (*set_frame)(void*, u
 	this->anim_time -= timer_dt;
 }
 
+
 boolean Animatable_Ended(Animatable *this)
 {
+
 	return this->ended;
 }

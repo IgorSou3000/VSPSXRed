@@ -22,11 +22,12 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
-int bfnotex, swap;
+int bfnotex, swap, swapmiss;
 int thundercooldown = 0;
 int thunder = 0;
 int flamecooldown = 0;
 int flame = 0;
+int final;
 
 
 //Stage constants
@@ -51,11 +52,11 @@ static const fixed_t note_y = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
 
 static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
 
-static const u8 note_anims[4][3] = {
-	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
-	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
-	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss},
-	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
+static const u8 note_anims[4][4] = {
+	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss,  PlayerAnim_LeftMiss2},
+	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss,  PlayerAnim_DownMiss2},
+	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss,  PlayerAnim_UpMiss2},
+	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss,  PlayerAnim_RightMiss2},
 };
 
 //Stage definitions
@@ -465,7 +466,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 	if (!stage.ghost)
 	{
 		if (this->character->spec & CHAR_SPEC_MISSANIM)
-			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
+			this->character->set_anim(this->character, note_anims[type & 0x3][swapmiss]);
 
 	    else
 	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
@@ -1272,6 +1273,7 @@ static void Stage_LoadState(void)
 		stage.player_state[i].combo = 0;
 		stage.gameboy = 0;
 		swap = 0;
+		swapmiss = 2;
 		
 		stage.player_state[i].refresh_score = false;
 		stage.player_state[i].score = 0;
@@ -1468,7 +1470,9 @@ void Stage_Tick(void)
 		{
 			stage.trans = (stage.state == StageState_Play) ? StageTrans_Menu : StageTrans_Reload;
 			Trans_Start();
+			final = 0;
 		}
+		
 	}
 	
 	if (Trans_Tick())
@@ -1493,7 +1497,7 @@ void Stage_Tick(void)
 				{
 					if (stage.stage_id <= StageId_LastVanilla)
 					{
-						if (stage.stage_id == StageId_1_1)
+						if (stage.stage_id == StageId_1_1 && final == 1)
 							Menu_Load(MenuPage_Credits);
 
 						else if (stage.story)
@@ -1567,9 +1571,13 @@ void Stage_Tick(void)
 			if (stage.gameboy == 1)
 			{	
 			  swap = 1;
+			  swapmiss = 3;
 			}
 			else
+			{
 			 swap = 0;
+			 swapmiss = 2;
+			}
 
 			switch(stage.song_step)
 			{
@@ -1579,7 +1587,7 @@ void Stage_Tick(void)
 			case 574:
 			stage.gameboy = 0;
 			break;
-			case 642:
+			case 640:
 			stage.gameboy = 1;
 			break;
 			case 704:
@@ -1748,6 +1756,7 @@ void Stage_Tick(void)
 					else
 					{
 						stage.trans = StageTrans_Menu;
+						 final = 1;
 						Trans_Start();
 					}
 				}

@@ -47,7 +47,7 @@ iso/%.arc:
 	tools/funkinarcpak/funkinarcpak $@ $^
 
 # Menu
-iso/menu/menu.arc: iso/menu/gameboi.tim iso/menu/ng.tim iso/menu/story.tim iso/menu/title.tim iso/menu/cre0.tim iso/menu/cre1.tim iso/menu/cre2.tim iso/menu/cre3.tim
+iso/menu/menu.arc: iso/menu/gameboi.tim iso/menu/ng.tim iso/menu/story.tim iso/menu/title.tim iso/menu/cre0.tim iso/menu/cre1.tim iso/menu/cre2.tim iso/menu/cre3.tim iso/menu/cre4.tim
 
 # BF
 iso/bf/main.arc: iso/bf/bf0.tim iso/bf/bf1.tim iso/bf/bf2.tim iso/bf/bf3.tim iso/bf/bf4.tim iso/bf/bf5.tim  iso/bf/bfb0.tim iso/bf/bfb1.tim iso/bf/bfb2.tim iso/bf/bfb3.tim iso/bf/bfb4.tim iso/bf/bfb5.tim iso/bf/bf6.tim iso/bf/dead0.tim
@@ -96,7 +96,7 @@ iso/clucky/main.arc: iso/clucky/idle0.tim iso/clucky/idle1.tim iso/clucky/left.t
 # Week 1
 iso/week1/back.arc: iso/week1/back0.tim iso/week1/pixelp.tim
 iso/week1/pika.arc: iso/week1/pika0.tim iso/week1/pika1.tim
-iso/week1/char.arc: iso/week1/char0.tim iso/week1/char1.tim iso/week1/char2.tim iso/week1/char3.tim iso/week1/char4.tim iso/week1/char5.tim
+iso/week1/char.arc: iso/week1/char0.tim iso/week1/char1.tim iso/week1/char2.tim iso/week1/char3.tim iso/week1/char4.tim iso/week1/char5.tim iso/week1/pixelc0.tim iso/week1/pixelc1.tim iso/week1/pixelc2.tim iso/week1/pixelc3.tim
 
 # Week 2
 iso/week2/back.arc: iso/week2/back0.tim iso/week2/back1.tim iso/week2/back2.tim

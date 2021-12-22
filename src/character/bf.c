@@ -149,7 +149,7 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_BFB3, {  123,   26, 93, 93}, { 62, 93}},  //13 left miss 2
 	
 	{BF_ArcMain_BFB3, {  93,   145, 93, 89}, { 55, 89}},  //14 down miss 1
-	{BF_ArcMain_BFB3, {  132,   145, 91, 91}, { 53, 91}},  //15 down miss 2
+	{BF_ArcMain_BFB3, { 132,   145, 91, 91}, { 53, 91}},  //15 down miss 2
 	
 	{BF_ArcMain_BFB4, {  25,   11, 92, 100}, { 56, 100}},  //16 up miss 1
 	{BF_ArcMain_BFB4, {  117,   11, 91, 102}, { 55, 102}},  //17 up miss 2
@@ -174,6 +174,11 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{1, (const u8[]){ 6, 14, 14, 15, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
 	{1, (const u8[]){ 8, 16, 16, 17, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
 	{1, (const u8[]){10, 18, 18, 19, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
+
+	{1, (const u8[]){36, 44, 44, 45, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
+	{1, (const u8[]){38, 46, 46, 47, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
+	{1, (const u8[]){40, 48, 48, 49, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
+	{1, (const u8[]){42, 50, 50, 51, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
 	
 	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
 	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat

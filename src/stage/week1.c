@@ -19,7 +19,7 @@ typedef struct
 	
 	//Textures
 	IO_Data arc_pika, arc_pika_ptr[2];
-	IO_Data arc_char, arc_char_ptr[6];
+	IO_Data arc_char, arc_char_ptr[10];
 
 	Gfx_Tex tex_back0; //Stage and back
 	Gfx_Tex tex_pixelp;
@@ -49,6 +49,7 @@ static const CharFrame pika_frame[] = {
 	
 	{1, {  31,  127, 105, 86}, { 69,  86}}, //5 right 1
 	{1, {136,   128,  104, 86}, { 69, 86}}, //6 right 2
+
 };
 
 static const Animation pika_anim[] = {
@@ -91,11 +92,17 @@ static const CharFrame char_frame[] = {
 	{3, {5,   17, 246, 195}, { 97,  195}}, //3 left 4
 	{4, {6,   18, 246, 194}, { 96,  194}}, //5 right 1
 	{5, {27,   9, 206, 204}, { 74,  204}}, //5 attac
+
+	{6, {0,     0,  160, 160}, { 69, 86}}, 
+	{7, {0,     0,  160, 160}, { 69, 86}}, 
+	{8, {0,     0,  160, 160}, { 69, 86}},
+	{9, {0,     0,  160, 160}, { 69, 86}},  
 };
 
 static const Animation char_anim[] = {
 	{2, (const u8[]){0, 1, 2, 3, 4, ASCR_BACK, 1}}, //Left
 	{2, (const u8[]){5, 5, 5, 5, 5, ASCR_BACK, 1}}, //Left
+	{2, (const u8[]){6, 7, 8, 9, ASCR_BACK, 1}}, //Left
 };
 
 
@@ -140,7 +147,7 @@ void Back_Week1_DrawFG(StageBack *back)
 	
 	if (stage.flag & STAGE_FLAG_JUST_STEP)
 	{
-		switch (stage.song_step & 7)
+		switch (stage.song_step & 6)
 		{
 			case 0:
 				Animatable_SetAnim(&this->pika_animatable, 0);
@@ -198,17 +205,24 @@ void Back_Week1_DrawBG(StageBack *back)
 
 	if (stage.flag & STAGE_FLAG_JUST_STEP)
 	{
-		switch (stage.song_step & 7)
+		switch (stage.song_step & 6)
 		{
 			case 0:
-				Animatable_SetAnim(&this->char_animatable, 0);
+				Animatable_SetAnim(&this->char_animatable, (stage.gameboy == 1) ? 2 : 0);
 				break;
 		}
 	}
 	Animatable_Animate(&this->char_animatable, (void*)this, Week1_Char_SetFrame);
 	
-	if (stage.gameboy != 1)
+    
+	 if (stage.gameboy != 1)
 	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(60,1) - fy);
+
+	if (stage.gameboy == 1)
+    	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(10,1) - fy);
+
+
+
 
 	if (stage.gameboy != 1 && stage.flame == 1)
 	Animatable_SetAnim(&this->char_animatable, 1);
@@ -272,6 +286,10 @@ StageBack *Back_Week1_New(void)
 	this->arc_char_ptr[3] = Archive_Find(this->arc_char, "char3.tim");
 	this->arc_char_ptr[4] = Archive_Find(this->arc_char, "char4.tim");
 	this->arc_char_ptr[5] = Archive_Find(this->arc_char, "char5.tim");
+	this->arc_char_ptr[6] = Archive_Find(this->arc_char, "pixelc0.tim");
+	this->arc_char_ptr[7] = Archive_Find(this->arc_char, "pixelc1.tim");
+	this->arc_char_ptr[8] = Archive_Find(this->arc_char, "pixelc2.tim");
+	this->arc_char_ptr[9] = Archive_Find(this->arc_char, "pixelc3.tim");
 
 	//Initialize pikachu state
 	Animatable_Init(&this->pika_animatable, pika_anim);

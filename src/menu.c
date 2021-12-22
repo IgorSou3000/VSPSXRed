@@ -25,7 +25,7 @@
 #include "character/redm.h"
 #include "character/charm.h"
 
-int slide = 540;
+int slide;
 int cre;
 
 //Menu messages
@@ -108,7 +108,7 @@ static struct
 	} page_param;
 	
 	//Menu assets
-	Gfx_Tex tex_game, tex_ng, tex_story, tex_title, tex_cre0, tex_cre1, tex_cre2,tex_cre3;
+	Gfx_Tex tex_game, tex_ng, tex_story, tex_title, tex_cre0, tex_cre1, tex_cre2,tex_cre3,tex_cre4;
 	FontData font_bold, font_arial;
 	
 	Character *redm; //Title Girlfriend
@@ -264,6 +264,7 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_cre1, Archive_Find(menu_arc, "cre1.tim"), 0);
 	Gfx_LoadTex(&menu.tex_cre2, Archive_Find(menu_arc, "cre2.tim"), 0);
 	Gfx_LoadTex(&menu.tex_cre3, Archive_Find(menu_arc, "cre3.tim"), 0);
+	Gfx_LoadTex(&menu.tex_cre4, Archive_Find(menu_arc, "cre4.tim"), 0);
 	Mem_Free(menu_arc);
 	
 	FontData_Load(&menu.font_bold, Font_Bold);
@@ -353,6 +354,45 @@ void Menu_Tick(void)
 		menu.page = menu.next_page;
 		menu.select = menu.next_select;
 	}
+
+		void DrawLogo()
+			{
+
+			//Draw Friday Night Funkin' logo
+			if ((stage.flag & STAGE_FLAG_JUST_STEP) && (stage.song_step & 0x3) == 0 && menu.page_state.title.logo_bump == 0)
+				menu.page_state.title.logo_bump = (FIXED_DEC(7,1) / 24) - 1;
+			
+			static const fixed_t logo_scales[] = {
+				FIXED_DEC(1,1),
+				FIXED_DEC(101,100),
+				FIXED_DEC(102,100),
+				FIXED_DEC(103,100),
+				FIXED_DEC(105,100),
+				FIXED_DEC(110,100),
+				FIXED_DEC(97,100),
+			};
+			fixed_t logo_scale = logo_scales[(menu.page_state.title.logo_bump * 24) >> FIXED_SHIFT];
+			u32 x_rad = (logo_scale * (176 >> 1)) >> FIXED_SHIFT;
+			u32 y_rad = (logo_scale * (112 >> 1)) >> FIXED_SHIFT;
+			
+			RECT logo_src = {0, 0, 256, 112};
+			RECT logo_dst = {
+				164 - x_rad + (SCREEN_WIDEADD2 >> 1),
+				slide - y_rad,
+				x_rad << 1,
+				y_rad << 1
+			};
+			Gfx_DrawTex(&menu.tex_title, &logo_src, &logo_dst);
+			
+			if (menu.page_state.title.logo_bump > 0)
+				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)
+					menu.page_state.title.logo_bump = 0;
+
+			slide -= 3;
+
+			if (slide < 60)
+			    slide = 60;
+			}
 	
 	//Tick menu page
 	MenuPage exec_page;
@@ -361,9 +401,11 @@ void Menu_Tick(void)
 		case MenuPage_Opening:
 		{
 			u16 beat = stage.song_step >> 2;
+
+			slide = 540;
 			
 			//Start title screen if opening ended
-			if (beat >= 20)
+			if (beat >= 19)
 			{
 				menu.page = menu.next_page = MenuPage_Title;
 				menu.page_swap = true;
@@ -407,8 +449,7 @@ void Menu_Tick(void)
 					case 9:
 						menu.font_bold.draw(&menu.font_bold, funny_message[0], SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
 						break;
-                    
-					case 20:
+
                     case 19:
 					case 18:
 					  menu.font_bold.draw(&menu.font_bold, "RED VERSION", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 24, FontAlign_Center);
@@ -432,7 +473,6 @@ void Menu_Tick(void)
 		{
 			Gfx_SetClear(255, 255, 255);
 			
-			slide = slide - 3;
 			//Initialize page
 			if (menu.page_swap)
 			{
@@ -463,39 +503,7 @@ void Menu_Tick(void)
 				menu.next_select = 0;
 			}
 			
-			//Draw Friday Night Funkin' logo
-			if ((stage.flag & STAGE_FLAG_JUST_STEP) && (stage.song_step & 0x3) == 0 && menu.page_state.title.logo_bump == 0)
-				menu.page_state.title.logo_bump = (FIXED_DEC(7,1) / 24) - 1;
-			
-			static const fixed_t logo_scales[] = {
-				FIXED_DEC(1,1),
-				FIXED_DEC(101,100),
-				FIXED_DEC(102,100),
-				FIXED_DEC(103,100),
-				FIXED_DEC(105,100),
-				FIXED_DEC(110,100),
-				FIXED_DEC(97,100),
-			};
-			fixed_t logo_scale = logo_scales[(menu.page_state.title.logo_bump * 24) >> FIXED_SHIFT];
-			u32 x_rad = (logo_scale * (176 >> 1)) >> FIXED_SHIFT;
-			u32 y_rad = (logo_scale * (112 >> 1)) >> FIXED_SHIFT;
-			
-			RECT logo_src = {0, 0, 256, 112};
-			RECT logo_dst = {
-				164 - x_rad + (SCREEN_WIDEADD2 >> 1),
-				slide - y_rad,
-				x_rad << 1,
-				y_rad << 1
-			};
-			Gfx_DrawTex(&menu.tex_title, &logo_src, &logo_dst);
-			
-			if (menu.page_state.title.logo_bump > 0)
-				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)
-					menu.page_state.title.logo_bump = 0;
-
-			if (slide < 60)
-			    slide = 60;
-			
+			DrawLogo();
 			//Draw Girlfriend
 			menu.redm->tick(menu.redm);
 			menu.charm->tick(menu.charm);
@@ -503,6 +511,10 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Main:
 		{
+            slide = 540;
+
+			if (cre == 700)
+			    cre = 0;
 
 			Gfx_SetClear(255, 255, 255);
 			static const char *menu_options[] = {
@@ -757,29 +769,7 @@ void Menu_Tick(void)
 				u32 col;
 				const char *text;
 			} menu_options[] = {
-				//{StageId_4_4, 0xFFFC96D7, "TEST"},
-				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
 				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
-				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
-				{StageId_2_1, 0xFF223344, "SPOOKEEZ"},
-				{StageId_2_2, 0xFF223344, "SOUTH"},
-				{StageId_2_3, 0xFF223344, "MONSTER"},
-				{StageId_3_1, 0xFF941653, "PICO"},
-				{StageId_3_2, 0xFF941653, "PHILLY NICE"},
-				{StageId_3_3, 0xFF941653, "BLAMMED"},
-				{StageId_4_1, 0xFFFC96D7, "SATIN PANTIES"},
-				{StageId_4_2, 0xFFFC96D7, "HIGH"},
-				{StageId_4_3, 0xFFFC96D7, "MILF"},
-				{StageId_5_1, 0xFFA0D1FF, "COCOA"},
-				{StageId_5_2, 0xFFA0D1FF, "EGGNOG"},
-				{StageId_5_3, 0xFFA0D1FF, "WINTER HORRORLAND"},
-				{StageId_6_1, 0xFFFF78BF, "SENPAI"},
-				{StageId_6_2, 0xFFFF78BF, "ROSES"},
-				{StageId_6_3, 0xFFFF78BF, "THORNS"},
-				{StageId_7_1, 0xFFF6B604, "UGH"},
-				{StageId_7_2, 0xFFF6B604, "GUNS"},
-				{StageId_7_3, 0xFFF6B604, "STRESS"},
 			};
 			
 			//Initialize page
@@ -1094,24 +1084,26 @@ void Menu_Tick(void)
 		case MenuPage_Credits:
 		{
 			cre--;
+			Gfx_SetClear(255,255,255);
+            
 
-			if (stage.song_step >= 126) 
+			if (stage.song_step >= 134 && stage.song_step <= 170) 
 			{
 			   menu.redm->tick(menu.redm);
 			   menu.charm->tick(menu.charm);
-			   Gfx_SetClear(255,255,255);
 			}
 
-			if (menu.page != MenuPage_Credits)
-			   cre;
+			if (stage.song_step >= 140 && stage.song_step <= 170) 
+			{
+			   DrawLogo();		   
+			}
 
-			
-
-			if (stage.song_step >= 134  || ((pad_state.press & PAD_START)))
+			if (stage.song_step >= 195  || ((pad_state.press & PAD_START)))
 			{
 					menu.next_page = MenuPage_Main;
 					menu.next_select = 0; //Freeplay
-					Trans_Start();	
+					Trans_Start();
+					cre = +700 ;	
 			}
 				   
 	           //Draw different text depending on beat
@@ -1121,6 +1113,9 @@ void Menu_Tick(void)
 				Gfx_BlitTex(&menu.tex_cre1, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 240 + cre);
 				Gfx_BlitTex(&menu.tex_cre2, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 496 + cre);
 				Gfx_BlitTex(&menu.tex_cre3, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 752 + cre);
+
+                if (stage.song_step >= 172) 
+				Gfx_BlitTex(&menu.tex_cre4, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 - 120);
 
 				if (pad_state.held & PAD_DOWN)
 				   cre--;
@@ -1420,37 +1415,7 @@ void Menu_Tick(void)
 				const char *text;
 			} menu_options[] = {
 				//{StageId_4_4, "TEST"},
-				{true,  StageId_1_4, "TUTORIAL"},
-				{true,  StageId_1_1, "BOPEEBO"},
-				{true,  StageId_1_2, "FRESH"},
-				{true,  StageId_1_3, "DADBATTLE"},
-				{true,  StageId_2_1, "SPOOKEEZ"},
-				{true,  StageId_2_2, "SOUTH"},
-				{true,  StageId_2_3, "MONSTER"},
-				{true,  StageId_3_1, "PICO"},
-				{true,  StageId_3_2, "PHILLY NICE"},
-				{true,  StageId_3_3, "BLAMMED"},
-				{true,  StageId_4_1, "SATIN PANTIES"},
-				{true,  StageId_4_2, "HIGH"},
-				{true,  StageId_4_3, "MILF"},
-				{true,  StageId_5_1, "COCOA"},
-				{true,  StageId_5_2, "EGGNOG"},
-				{true,  StageId_5_3, "WINTER HORRORLAND"},
-				{true,  StageId_6_1, "SENPAI"},
-				{true,  StageId_6_2, "ROSES"},
-				{true,  StageId_6_3, "THORNS"},
-				{true,  StageId_7_1, "UGH"},
-				{true,  StageId_7_2, "GUNS"},
-				{true,  StageId_7_3, "STRESS"},
-				{false, StageId_Kapi_1, "WOCKY"},
-				{false, StageId_Kapi_2, "BEATHOVEN"},
-				{false, StageId_Kapi_3, "HAIRBALL"},
-				{false, StageId_Kapi_4, "NYAW"},
-				{true,  StageId_Clwn_1, "IMPROBABLE OUTSET"},
-				{true,  StageId_Clwn_2, "MADNESS"},
-				{true,  StageId_Clwn_3, "HELLCLOWN"},
-				{false, StageId_Clwn_4, "EXPURGATION"},
-				{false, StageId_2_4, "CLUCKED"},
+				{false,  StageId_1_1, "BOPEEBO"},
 			};
 			
 			//Initialize page
