@@ -219,7 +219,7 @@ void Back_Week1_DrawBG(StageBack *back)
 	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(60,1) - fy);
 
 	if (stage.gameboy == 1)
-    	Week1_Char_Draw(this, FIXED_DEC(156,1) - fx, FIXED_DEC(60,1) - fy);
+    Week1_Char_Draw(this, FIXED_DEC(156,1) - fx, FIXED_DEC(60,1) - fy);
 
 
 

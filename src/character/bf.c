@@ -148,7 +148,7 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_BFB3, {  26,   26, 97, 91}, { 65, 91}},  //12 left miss 1
 	{BF_ArcMain_BFB3, {  123,   26, 93, 93}, { 62, 93}},  //13 left miss 2
 	
-	{BF_ArcMain_BFB3, {  93,   145, 93, 89}, { 55, 89}},  //14 down miss 1
+	{BF_ArcMain_BFB3, {  39,   145, 93, 89}, { 55, 89}},  //14 down miss 1
 	{BF_ArcMain_BFB3, { 132,   145, 91, 91}, { 53, 91}},  //15 down miss 2
 	
 	{BF_ArcMain_BFB4, {  25,   11, 92, 100}, { 56, 100}},  //16 up miss 1

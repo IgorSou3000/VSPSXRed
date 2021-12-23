@@ -61,31 +61,12 @@ static const u8 note_anims[4][4] = {
 
 //Stage definitions
 #include "character/bf.h"
-#include "character/bfweeb.h"
-#include "character/dad.h"
+#include "character/red.h"
 #include "character/redm.h"
 #include "character/charm.h"
-#include "character/spook.h"
-#include "character/pico.h"
-#include "character/mom.h"
-#include "character/xmasbf.h"
-#include "character/xmasp.h"
-#include "character/senpai.h"
-#include "character/senpaim.h"
-#include "character/spirit.h"
-#include "character/tank.h"
 #include "character/gf.h"
-#include "character/gfweeb.h"
-#include "character/clucky.h"
 
-#include "stage/dummy.h"
 #include "stage/week1.h"
-#include "stage/week2.h"
-#include "stage/week3.h"
-#include "stage/week4.h"
-#include "stage/week5.h"
-#include "stage/week6.h"
-#include "stage/week7.h"
 
 static const StageDef stage_defs[StageId_Max] = {
 	#include "stagedef_disc1.h"
@@ -374,6 +355,9 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			
 				this->health -= 3500;
 			
+			stage.fadethunder = FIXED_DEC(255,1);
+			stage.fadeextra = FIXED_DEC(0,1);
+			stage.fadespeed = FIXED_DEC(90,1);
 			stage.thunderbolt = 1;
 
 	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
@@ -422,7 +406,11 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			
 			//Hit the mine
 			note->type |= NOTE_FLAG_HIT;
-
+                
+				stage.fadeflame = FIXED_DEC(255,1);
+		    	stage.fadeextra = FIXED_DEC(106,1);
+				stage.fadeextra2 = FIXED_DEC(0,1);
+			    stage.fadespeed = FIXED_DEC(90,1);
 			    stage.flame = 1;
 				this->health -= 3500;
 
@@ -1560,7 +1548,7 @@ void Stage_Tick(void)
 			fixed_t next_scroll;
 
 			//timer
-              FntPrint("timercount %d ", stage.song_step);
+              //FntPrint("timercount %d ", stage.song_step);
 
 			if (stage.mode == StageMode_Normal || stage.mode == StageMode_Swap)
 			   bfnotex = -153;
@@ -1601,44 +1589,47 @@ void Stage_Tick(void)
 			break;
 			}
 
+			if (stage.fadethunder > 0)
+			{
+         		static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+				u8 flash_col = stage.fadethunder >> FIXED_SHIFT;
+				u8 flash_col2 = stage.fadeextra >> FIXED_SHIFT;
+				Gfx_BlendRect(&flash, flash_col, flash_col, flash_col2, 1);
+				stage.fadethunder -= FIXED_MUL(stage.fadespeed, timer_dt*3);  
+
+            
+			}
 			if (stage.thunderbolt == 1)
 			{
-			RECT dst_laser = {0, 0, 400, 400};
-
-			if (thunder != 10)
-			{
-			Gfx_BlendRect(&dst_laser, 228, 253, 1, 0);
-			thunder++;
-			}
-
 			 thundercooldown++;
-			   				
-			 if (thundercooldown == 20)
-			 {
-			   stage.thunderbolt = 0;
-			   thundercooldown = 0;
-			   thunder = 0;
 
-			 }
-			}
-			if (stage.flame == 1)
-			{
-			RECT dst_laser = {0, 0, 400, 400};
-
-			if (flame != 10)
-			{
-			Gfx_BlendRect(&dst_laser, 253, 114, 1, 0);
-			flame++;
+			 if (thundercooldown >= 30)
+			    {
+				 stage.thunderbolt = 0;
+			     thundercooldown = 0;	
+				}
 			}
 
+			if (stage.fadeflame > 0)
+			{
+         		static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+				u8 flash_col = stage.fadeflame >> FIXED_SHIFT;
+				u8 flash_col2 = (stage.fadeextra - 149) >> FIXED_SHIFT;
+				Gfx_BlendRect(&flash, flash_col, flash_col2, 0, 1);
+				stage.fadeflame -= FIXED_MUL(stage.fadespeed, timer_dt*3);
+				stage.fadeextra -= FIXED_MUL(stage.fadespeed, timer_dt);   
+            
+			}
+
+			if (stage.flame == 1)	
+			{
 			 flamecooldown++;	
 			
-			 if (flamecooldown == 20)
+			 if (flamecooldown >= 30)
 			 {
 			   stage.flame = 0;
 			   flamecooldown = 0;
 			   flame = 0;
-
 			 }
 			}
 
@@ -1945,7 +1936,7 @@ void Stage_Tick(void)
 				
 				//Display score
 				RECT score_src = {80, 224, 40, 10};
-				RECT_FIXED score_dst = {(i ^ (stage.mode == StageMode_Swap)) ? FIXED_DEC(-100,1) : FIXED_DEC(14,1), (SCREEN_HEIGHT2 - 42) << FIXED_SHIFT, FIXED_DEC(40,1), FIXED_DEC(10,1)};
+				RECT_FIXED score_dst = {(i ^ (stage.mode == StageMode_Swap)) ? FIXED_DEC(-100,1) : FIXED_DEC(14,1), (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT, FIXED_DEC(40,1), FIXED_DEC(10,1)};
 				if (stage.downscroll)
 					score_dst.y = -score_dst.y - score_dst.h;
 				

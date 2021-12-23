@@ -239,8 +239,8 @@ typedef struct
 	s16 song_step;
 
 	u8 gameboy;
-	u8 flame;
-	u8 thunderbolt;
+	u8 flame, thunderbolt;
+	fixed_t fadethunder, fadeflame, fadespeed, fadeextra, fadeextra2;
 	
 	u8 gf_speed; //Typically 4 steps, changes in Fresh
 	
