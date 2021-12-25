@@ -377,20 +377,14 @@ void Menu_Tick(void)
 			
 			static const fixed_t logo_scales[] = {
 				FIXED_DEC(1,1),
-				FIXED_DEC(101,100),
-				FIXED_DEC(102,100),
-				FIXED_DEC(103,100),
-				FIXED_DEC(105,100),
-				FIXED_DEC(110,100),
-				FIXED_DEC(97,100),
 			};
 			fixed_t logo_scale = logo_scales[(menu.page_state.title.logo_bump * 24) >> FIXED_SHIFT];
-			u32 x_rad = (logo_scale * (176 >> 1)) >> FIXED_SHIFT;
-			u32 y_rad = (logo_scale * (112 >> 1)) >> FIXED_SHIFT;
+			u32 x_rad = (logo_scale * (256 >> 1)) >> FIXED_SHIFT;
+			u32 y_rad = (logo_scale * (98 >> 1)) >> FIXED_SHIFT;
 			
-			RECT logo_src = {0, 0, 256, 112};
+			RECT logo_src = {0, 0, 256, 98};
 			RECT logo_dst = {
-				164 - x_rad + (SCREEN_WIDEADD2 >> 1),
+				150 - x_rad + (SCREEN_WIDEADD2 >> 1),
 				slide - y_rad,
 				x_rad << 1,
 				y_rad << 1
