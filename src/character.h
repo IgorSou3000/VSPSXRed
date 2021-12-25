@@ -25,7 +25,6 @@ typedef enum
 	CharAnim_Down,  CharAnim_DownAlt,
 	CharAnim_Up,    CharAnim_UpAlt,
 	CharAnim_Right, CharAnim_RightAlt,
-	CharAnim_Idle2,
 	
 	CharAnim_Max //Max standard/shared animation
 } CharAnim;
@@ -55,6 +54,7 @@ typedef struct Character
 	
 	//Animation state
 	Animatable animatable;
+	Animatable animatable2;
 	fixed_t sing_end;
 	u16 pad_held;
 } Character;

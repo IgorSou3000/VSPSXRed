@@ -93,32 +93,15 @@ SOURCES = main \
           pc/pad \
           pc/timer \
           pc/movie \
-          stage/dummy \
           stage/week1 \
-          stage/week2 \
-          stage/week3 \
-          stage/week4 \
-          stage/week5 \
-          stage/week6 \
-          stage/week7 \
           animation \
           character \
           character/bf \
-          character/bfweeb \
           character/speaker \
-          character/dad \
-          character/spook \
-          character/pico \
-          character/mom \
-          character/xmasbf \
-          character/xmasp \
-          character/senpai \
-          character/senpaim \
-          character/spirit \
-          character/tank \
+          character/charm \
+          character/red \
+          character/redm \
           character/gf \
-          character/gfweeb \
-          character/clucky \
           object \
           object/combo \
           object/splash

@@ -35,7 +35,7 @@ typedef struct
 	u8 char_frame, char_tex_id;
 	
 	Animatable char_animatable;
-
+	Animatable charp_animatable;
 
 } Back_Week1;
 
@@ -102,9 +102,10 @@ static const CharFrame char_frame[] = {
 static const Animation char_anim[] = {
 	{2, (const u8[]){0, 1, 2, 3, 4, ASCR_BACK, 1}}, //Left
 	{2, (const u8[]){5, 5, 5, 5, 5, ASCR_BACK, 1}}, //Left
+};
+static const Animation charp_anim[] = {
 	{2, (const u8[]){6, 7, 8, 9, ASCR_BACK, 1}}, //Left
 };
-
 
 //Charizard functions
 void Week1_Char_SetFrame(void *user, u8 frame)
@@ -147,17 +148,19 @@ void Back_Week1_DrawFG(StageBack *back)
 	
 	if (stage.flag & STAGE_FLAG_JUST_STEP)
 	{
-		switch (stage.song_step & 6)
+		switch (stage.song_step & 3 << 1)
 		{
 			case 0:
 				Animatable_SetAnim(&this->pika_animatable, 0);
 				break;
 		}
 	}
+	
 	Animatable_Animate(&this->pika_animatable, (void*)this, Week1_Pika_SetFrame);
 	
 	if (stage.gameboy != 1)
 	Week1_Pika_Draw(this, FIXED_DEC(220,1) - fx, FIXED_DEC(80,1) - fy);
+
 
 	if (stage.gameboy != 1 && stage.thunderbolt == 1)
 	Animatable_SetAnim(&this->pika_animatable, 1);
@@ -205,21 +208,28 @@ void Back_Week1_DrawBG(StageBack *back)
 
 	if (stage.flag & STAGE_FLAG_JUST_STEP)
 	{
-		switch (stage.song_step & 6)
+		switch (stage.song_step & 3 << 1)
 		{
 			case 0:
-				Animatable_SetAnim(&this->char_animatable, (stage.gameboy == 1) ? 2 : 0);
+				Animatable_SetAnim(&this->char_animatable,  0);
+				Animatable_SetAnim(&this->charp_animatable,  0);
 				break;
 		}
 	}
-	Animatable_Animate(&this->char_animatable, (void*)this, Week1_Char_SetFrame);
-	
     
-	 if (stage.gameboy != 1)
-	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(60,1) - fy);
 
-	if (stage.gameboy == 1)
+	 if (stage.gameboy != 1)
+	 {
+	Animatable_Animate(&this->char_animatable, (void*)this, Week1_Char_SetFrame);
+	Week1_Char_Draw(this, FIXED_DEC(86,1) - fx, FIXED_DEC(60,1) - fy);
+	 }
+    
+	
+	else if (stage.gameboy == 1)
+	{
+	Animatable_Animate(&this->charp_animatable, (void*)this, Week1_Char_SetFrame);
     Week1_Char_Draw(this, FIXED_DEC(156,1) - fx, FIXED_DEC(60,1) - fy);
+	}
 
 
 
@@ -233,9 +243,9 @@ void Back_Week1_DrawBG(StageBack *back)
 	RECT back_src = {0, 0, 256, 141};
 	RECT_FIXED back_dst = {
 		FIXED_DEC(-310,1) - fx,
-		FIXED_DEC(-130,1) - fy,
+		FIXED_DEC(-133,1) - fy,
 		FIXED_DEC(630,1),
-		FIXED_DEC(381,1)
+		FIXED_DEC(390,1)
 	};
 
 	Stage_DrawTex(&this->tex_back0, &back_src, &back_dst, stage.camera.bzoom);
@@ -298,7 +308,9 @@ StageBack *Back_Week1_New(void)
 
 	//Initialize charizard state
 	Animatable_Init(&this->char_animatable, char_anim);
+	Animatable_Init(&this->charp_animatable, charp_anim);
 	Animatable_SetAnim(&this->char_animatable, 0);
+	Animatable_SetAnim(&this->charp_animatable, 0);
 	this->char_frame = this->char_tex_id = 0xFF; //Force art load
 
 	//Use sky coloured background

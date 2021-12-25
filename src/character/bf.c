@@ -113,20 +113,20 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_BF4, {  9, 136,  118, 107}, { 47, 107}}, //18 right miss 1
 	{BF_ArcMain_BF4, {127, 136, 116, 108}, { 48, 108}}, //19 right miss 2
 
-	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //20 dead0 0
-	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //21 dead0 1
-	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //22 dead0 2
-	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //23 dead0 3
+	{BF_ArcMain_Dead0, { 50,   8, 161,  52}, { 53,  98}}, //20 dead0 0
+	{BF_ArcMain_Dead0, { 48,  62, 161,  51}, { 53,  98}}, //21 dead0 1
+	{BF_ArcMain_Dead0, { 48, 115, 161,  51}, { 53,  98}}, //22 dead0 2
+	{BF_ArcMain_Dead0, { 48, 172, 161,  51}, { 53,  98}}, //23 dead0 3
 	
-	{BF_ArcDead_Dead1, {  0,   0, 128, 128}, { 53,  98}}, //24 dead1 0
-	{BF_ArcDead_Dead1, {128,   0, 128, 128}, { 53,  98}}, //25 dead1 1
-	{BF_ArcDead_Dead1, {  0, 128, 128, 128}, { 53,  98}}, //26 dead1 2
-	{BF_ArcDead_Dead1, {128, 128, 128, 128}, { 53,  98}}, //27 dead1 3
+	{BF_ArcDead_Dead1, { 50,   8, 161,  52}, { 53,  98}}, //24 dead1 0
+	{BF_ArcDead_Dead1, { 48,  62, 161,  51}, { 53,  98}}, //25 dead1 1
+	{BF_ArcDead_Dead1, { 48, 115, 161,  51}, { 53,  98}}, //26 dead1 2
+	{BF_ArcDead_Dead1, { 48, 172, 161,  51}, { 53,  98}}, //27 dead1 3
 	
-	{BF_ArcDead_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //28 dead2 body twitch 0
-	{BF_ArcDead_Dead2, {128,   0, 128, 128}, { 53,  98}}, //29 dead2 body twitch 1
-	{BF_ArcDead_Dead2, {  0, 128, 128, 128}, { 53,  98}}, //30 dead2 balls twitch 0
-	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //31 dead2 balls twitch 1
+	{BF_ArcDead_Dead2, { 50,   8, 161,  52}, { 53,  98}}, //28 dead2 0
+	{BF_ArcDead_Dead2, { 48,  62, 161,  51}, { 53,  98}}, //29 dead2 1
+	{BF_ArcDead_Dead2, { 47, 113, 179,  59}, { 53,  98}}, //30 dead2 2
+	{BF_ArcDead_Dead2, { 49, 176,  55,  18}, { 53,  98}}, //31 dead2 3
 
 	{BF_ArcMain_BFB0, {  35,   22, 91, 97}, { 55, 97}},  //0 idle 1
 	{BF_ArcMain_BFB0, {  126,   21, 91, 98}, { 55, 98}},  //1 idle 2
@@ -156,24 +156,50 @@ static const CharFrame char_bf_frame[] = {
 	
 	{BF_ArcMain_BFB4, {  29,   147, 94, 92}, { 50, 92}},  //18 right miss 1
 	{BF_ArcMain_BFB4, {  123,   147, 93, 93}, { 49, 93}},  //19 right miss 2
+
+	{BF_ArcDead_Dead2, { 49, 199,  11,  4}, { 53,  98}}, //32 dead2 3
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){ 0,  1,  2,  3,  ASCR_BACK, 1}}, //CharAnim_Idle
 	{2, (const u8[]){ 4,  5, ASCR_BACK, 1}},             //CharAnim_Left
-	{2, (const u8[]){36, 37,  ASCR_BACK, 1}},       //CharAnim_LeftAlt
+	{2, (const u8[]){ 4,  5, ASCR_BACK, 1}},       //CharAnim_LeftAlt
 	{2, (const u8[]){ 6,  7, ASCR_BACK, 1}},             //CharAnim_Down
-	{2, (const u8[]){38, 39,  ASCR_BACK, 1}},       //CharAnim_DownAlt
+	{2, (const u8[]){ 6,  7, ASCR_BACK, 1}},      //CharAnim_DownAlt
 	{2, (const u8[]){ 8,  9, ASCR_BACK, 1}},             //CharAnim_Up
-	{2, (const u8[]){40, 41,  ASCR_BACK, 1}},          //CharAnim_UpAlt
+	{2, (const u8[]){ 8,  9, ASCR_BACK, 1}},         //CharAnim_UpAlt
 	{2, (const u8[]){10, 11, ASCR_BACK, 1}},             //CharAnim_Right
-	{2, (const u8[]){42, 43,  ASCR_BACK, 1}},         //CharAnim_RightAlt
-	{2, (const u8[]){32, 33, 34, 35,  ASCR_BACK, 1}},
+	{2, (const u8[]){10, 11, ASCR_BACK, 1}},         //CharAnim_RightAl
 	
 	{1, (const u8[]){ 4, 12, 12, 13, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){ 6, 14, 14, 15, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
 	{1, (const u8[]){ 8, 16, 16, 17, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
 	{1, (const u8[]){10, 18, 18, 19, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
+	
+	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
+	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
+	
+	{6, (const u8[]){20, 21, 20, 21, 20, 21, 22, 23, 22, 23, 22,  ASCR_CHGANI, PlayerAnim_Dead1}},
+	{6, (const u8[]){23, 24, 25, 24, 25, 26, 27, 26, 27, 26,ASCR_BACK, 1}},                                                       //PlayerAnim_Dead1
+	{6, (const u8[]){23, 24, 25, 24, 25, 26, 27, 26, 27, 26,ASCR_BACK, 1}}, //PlayerAnim_Dead2
+	{6, (const u8[]){26, 27, 26, 27, 26, 27, 26, 27, 26, 27, ASCR_CHGANI, PlayerAnim_Dead3}},                                                       //PlayerAnim_Dead3
+	{3, (const u8[]){28, 29, 27, 27, 27, 27, 27, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
+	{3, (const u8[]){30, 31, 27, 27, 27, 27, 27, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
+	
+	{3, (const u8[]){27, 28, 27, 28, 27, 28, 27, 28, 30, 31, 52, ASCR_BACK, 1}}, //PlayerAnim_Dead4
+	{3, (const u8[]){30, 31, 27, ASCR_REPEAT}},  //PlayerAnim_Dead5
+};
+
+static const Animation char_bf_anim2[PlayerAnim_Max] = {
+	{2, (const u8[]){32, 33, 34, 35,  ASCR_BACK, 1}}, //CharAnim_Idle
+	{2, (const u8[]){36, 37,  ASCR_BACK, 1}},              //CharAnim_Left
+	{2, (const u8[]){36, 37,  ASCR_BACK, 1}},       //CharAnim_LeftAlt
+	{2, (const u8[]){38, 39,  ASCR_BACK, 1}},             //CharAnim_Down
+	{2, (const u8[]){38, 39,  ASCR_BACK, 1}},       //CharAnim_DownAlt
+	{2, (const u8[]){40, 41,  ASCR_BACK, 1}},             //CharAnim_Up
+	{2, (const u8[]){40, 41,  ASCR_BACK, 1}},          //CharAnim_UpAlt
+	{2, (const u8[]){42, 43,  ASCR_BACK, 1}},             //CharAnim_Right
+	{2, (const u8[]){42, 43,  ASCR_BACK, 1}},         //CharAnim_RightAlt
 
 	{1, (const u8[]){36, 44, 44, 45, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){38, 46, 46, 47, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
@@ -183,15 +209,15 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
 	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
 	
-	{5, (const u8[]){23-3, 24-3, 25-3, 26-3, 26-3, 26-3, 26-3, 26-3, 26-3, 26-3, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
-	{5, (const u8[]){26-3, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
-	{3, (const u8[]){27-3, 28-3, 29-3, 30-3, 30-3, 30-3, 30-3, 30-3, 30-3, 30-3, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
-	{3, (const u8[]){30-3, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
-	{3, (const u8[]){31-3, 32-3, 30-3, 30-3, 30-3, 30-3, 30-3, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
-	{3, (const u8[]){33-3, 34-3, 30-3, 30-3, 30-3, 30-3, 30-3, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
+	{9, (const u8[]){20, 21, 20, 21, 20, 21, 22, 23, 22, 23, 22,  ASCR_CHGANI, PlayerAnim_Dead1}},
+	{9, (const u8[]){23, 24, 25, 24, 25, 26, 27, 26, 27, 26,ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
+	{9, (const u8[]){26, 27, 26, 27, 26, 27, 26, 27, 26, 27, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
+	{3, (const u8[]){27, ASCR_CHGANI, PlayerAnim_Dead3}},                                                       //PlayerAnim_Dead3
+	{3, (const u8[]){28, 29, 27, 27, 27, 27, 27, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
+	{3, (const u8[]){30, 31, 27, 27, 27, 27, 27, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
 	
-	{10, (const u8[]){30, 30, 30, ASCR_BACK, 1}}, //PlayerAnim_Dead4
-	{ 3, (const u8[]){33, 34, 30, ASCR_REPEAT}},  //PlayerAnim_Dead5
+	{3, (const u8[]){27, 28, 27, 28, 27, 28, 27, 28, 30, 31, 52, ASCR_BACK, 1}}, //PlayerAnim_Dead4
+	{ 3, (const u8[]){30, 31, 27, ASCR_REPEAT}},  //PlayerAnim_Dead5
 };
 
 //Boyfriend player functions
@@ -213,8 +239,7 @@ void Char_BF_Tick(Character *character)
 {
 	Char_BF *this = (Char_BF*)character;
 	
-	//Handle animation updates
-
+	//Handle animation update
 
 	 if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
 	    (character->animatable.anim != CharAnim_Left &&
@@ -245,112 +270,40 @@ void Char_BF_Tick(Character *character)
 		     character->animatable.anim != CharAnim_RightAlt &&
 		     character->animatable.anim != PlayerAnim_RightMiss) &&
 			(stage.song_step & 0x7) == 0)
-			character->set_anim(character, (stage.gameboy == 1) ? CharAnim_Idle2 : CharAnim_Idle);
-		}
-	
-	//Retry screen
-	if (character->animatable.anim >= PlayerAnim_Dead3)
-	{
-		//Tick skull fragments
-		if (this->skull_scale)
-		{
-			SkullFragment *frag = this->skull;
-			for (size_t i = 0; i < COUNT_OF_MEMBER(Char_BF, skull); i++, frag++)
-			{
-				//Draw fragment
-				RECT frag_src = {
-					(i & 1) ? 112 : 96,
-					(i >> 1) << 4,
-					16,
-					16
-				};
-				fixed_t skull_dim = (FIXED_DEC(16,1) * this->skull_scale) >> 6;
-				fixed_t skull_rad = skull_dim >> 1;
-				RECT_FIXED frag_dst = {
-					character->x + (((fixed_t)frag->x << FIXED_SHIFT) >> 3) - skull_rad - stage.camera.x,
-					character->y + (((fixed_t)frag->y << FIXED_SHIFT) >> 3) - skull_rad - stage.camera.y,
-					skull_dim,
-					skull_dim,
-				};
-				Stage_DrawTex(&this->tex_retry, &frag_src, &frag_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-				
-				//Move fragment
-				frag->x += frag->xsp;
-				frag->y += ++frag->ysp;
-			}
-			
-			//Decrease scale
-			this->skull_scale--;
-		}
+			character->set_anim(character, CharAnim_Idle);
 		
-		//Draw input options
-		u8 input_scale = 16 - this->skull_scale;
-		if (input_scale > 16)
-			input_scale = 0;
-		
-		RECT button_src = {
-			 0, 96,
-			16, 16
-		};
-		RECT_FIXED button_dst = {
-			character->x - FIXED_DEC(32,1) - stage.camera.x,
-			character->y - FIXED_DEC(88,1) - stage.camera.y,
-			(FIXED_DEC(16,1) * input_scale) >> 4,
-			FIXED_DEC(16,1),
-		};
-		
-		//Cross - Retry
-		Stage_DrawTex(&this->tex_retry, &button_src, &button_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-		
-		//Circle - Blueball
-		button_src.x = 16;
-		button_dst.y += FIXED_DEC(56,1);
-		Stage_DrawTex(&this->tex_retry, &button_src, &button_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-		
-		//Draw 'RETRY'
-		u8 retry_frame;
-		
-		if (character->animatable.anim == PlayerAnim_Dead6)
-		{
-			//Selected retry
-			retry_frame = 2 - (this->retry_bump >> 3);
-			if (retry_frame >= 3)
-				retry_frame = 0;
-			if (this->retry_bump & 2)
-				retry_frame += 3;
-			
-			if (++this->retry_bump == 0xFF)
-				this->retry_bump = 0xFD;
-		}
-		else
-		{
-			//Idle
-			retry_frame = 1 +  (this->retry_bump >> 2);
-			if (retry_frame >= 3)
-				retry_frame = 0;
-			
-			if (++this->retry_bump >= 55)
-				this->retry_bump = 0;
-		}
-		
-		RECT retry_src = {
-			(retry_frame & 1) ? 48 : 0,
-			(retry_frame >> 1) << 5,
-			48,
-			32
-		};
-		RECT_FIXED retry_dst = {
-			character->x -  FIXED_DEC(7,1) - stage.camera.x,
-			character->y - FIXED_DEC(92,1) - stage.camera.y,
-			FIXED_DEC(48,1),
-			FIXED_DEC(32,1),
-		};
-		Stage_DrawTex(&this->tex_retry, &retry_src, &retry_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
+
+		if (Animatable_Ended(&character->animatable2) &&
+			(character->animatable.anim != CharAnim_Left &&
+		     character->animatable.anim != CharAnim_LeftAlt &&
+		     character->animatable.anim != PlayerAnim_LeftMiss &&
+		     character->animatable.anim != CharAnim_Down &&
+		     character->animatable.anim != CharAnim_DownAlt &&
+		     character->animatable.anim != PlayerAnim_DownMiss &&
+		     character->animatable.anim != CharAnim_Up &&
+		     character->animatable.anim != CharAnim_UpAlt &&
+		     character->animatable.anim != PlayerAnim_UpMiss &&
+		     character->animatable.anim != CharAnim_Right &&
+		     character->animatable.anim != CharAnim_RightAlt &&
+		     character->animatable.anim != PlayerAnim_RightMiss) &&
+			(stage.song_step & 0x7) == 0)
+			character->set_anim(character, CharAnim_Idle);
 	}
 	
 	//Animate and draw character
+
+	if (stage.gameboy != 1)
+	{
 	Animatable_Animate(&character->animatable, (void*)this, Char_BF_SetFrame);
 	Character_Draw(character, &this->tex, &char_bf_frame[this->frame]);
+	}
+
+	else if (stage.gameboy == 1)
+	{
+	Animatable_Animate(&character->animatable2, (void*)this, Char_BF_SetFrame);
+	Character_Draw(character, &this->tex, &char_bf_frame[this->frame]);
+	}
+
 }
 
 void Char_BF_SetAnim(Character *character, u8 anim)
@@ -391,6 +344,7 @@ void Char_BF_SetAnim(Character *character, u8 anim)
 	
 	//Set animation
 	Animatable_SetAnim(&character->animatable, anim);
+	Animatable_SetAnim(&character->animatable2, anim);
 	Character_CheckStartSing(character);
 }
 
@@ -420,6 +374,7 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	this->character.free = Char_BF_Free;
 	
 	Animatable_Init(&this->character.animatable, char_bf_anim);
+	Animatable_Init(&this->character.animatable2, char_bf_anim2);
 	Character_Init((Character*)this, x, y);
 	
 	//Set character information
@@ -428,8 +383,8 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	this->character.health_i = 0;
 	
 	this->character.focus_x = FIXED_DEC(160,1);
-	this->character.focus_y = FIXED_DEC(-160,1);
-	this->character.focus_zoom = FIXED_DEC(8,10);
+	this->character.focus_y = FIXED_DEC(-180,1);
+	this->character.focus_zoom = FIXED_DEC(7,10);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\BF.ARC;1");

@@ -22,7 +22,7 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
-int bfnotex, swap, swapmiss;
+int bfnotex, cooldown, gamecooldown, gameone;
 int thundercooldown = 0;
 int thunder = 0;
 int flamecooldown = 0;
@@ -31,7 +31,6 @@ int final;
 
 
 //Stage constants
-//#define STAGE_PERFECT //Play all notes perfectly
 //#define STAGE_NOHUD //Disable the HUD
 
 //#define STAGE_FREECAM //Freecam
@@ -52,11 +51,11 @@ static const fixed_t note_y = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
 
 static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
 
-static const u8 note_anims[4][4] = {
-	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss,  PlayerAnim_LeftMiss2},
-	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss,  PlayerAnim_DownMiss2},
-	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss,  PlayerAnim_UpMiss2},
-	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss,  PlayerAnim_RightMiss2},
+static const u8 note_anims[4][3] = {
+	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
+	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
+	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss},
+	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
 };
 
 //Stage definitions
@@ -225,6 +224,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	//Increment combo and score
 	this->combo++;
 	
+	if (!(stage.botplay))
+	{
 	static const s32 score_inc[] = {
 		35, //SICK
 		20, //GOOD
@@ -233,6 +234,7 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	};
 	this->score += score_inc[hit_type];
 	this->refresh_score = true;
+	}
 	
 	//Restore vocals and health
 	Stage_StartVocal();
@@ -306,7 +308,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			//Hit the note
 			note->type |= NOTE_FLAG_HIT;
 			
-	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 
 			u8 hit_type = Stage_HitNote(this, type, stage.note_scroll - note_fp);
 			this->arrow_hitan[type & 0x3] = stage.step_time;
@@ -341,7 +343,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 		}
 		else if ((note->type & ( NOTE_FLAG_THUNDER)))
 		{
-			//Check if mine can be hit
+			//Check if thunder can be hit
 			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
 			if (note_fp - (stage.late_safe * 3 / 5) > stage.note_scroll)
 				break;
@@ -350,7 +352,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			if ((note->type & NOTE_FLAG_HIT) || (note->type & (NOTE_FLAG_OPPONENT | 0x3)) != type || (note->type & NOTE_FLAG_SUSTAIN))
 				continue;
 			
-			//Hit the mine
+			//Hit the thunder
 			note->type |= NOTE_FLAG_HIT;
 			
 				this->health -= 3500;
@@ -360,7 +362,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			stage.fadespeed = FIXED_DEC(90,1);
 			stage.thunderbolt = 1;
 
-	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 
 			this->arrow_hitan[type & 0x3] = -1;
 			
@@ -395,7 +397,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 
 		else
 		{
-			//Check if mine can be hit
+			//Check if flame can be hit
 			fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
 			if (note_fp - (stage.late_safe * 3 / 5) > stage.note_scroll)
 				break;
@@ -404,7 +406,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			if ((note->type & NOTE_FLAG_HIT) || (note->type & (NOTE_FLAG_OPPONENT | 0x3)) != type || (note->type & NOTE_FLAG_SUSTAIN))
 				continue;
 			
-			//Hit the mine
+			//Hit the flame
 			note->type |= NOTE_FLAG_HIT;
                 
 				stage.fadeflame = FIXED_DEC(255,1);
@@ -414,7 +416,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			    stage.flame = 1;
 				this->health -= 3500;
 
-	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 
 			this->arrow_hitan[type & 0x3] = -1;
 			
@@ -454,10 +456,10 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 	if (!stage.ghost)
 	{
 		if (this->character->spec & CHAR_SPEC_MISSANIM)
-			this->character->set_anim(this->character, note_anims[type & 0x3][swapmiss]);
+			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
 
 	    else
-	       this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 
 		Stage_MissNote(this);
 		
@@ -501,7 +503,7 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 		//Hit the note
 		note->type |= NOTE_FLAG_HIT;
 		
-		this->character->set_anim(this->character, note_anims[type & 0x3][swap]);
+		this->character->set_anim(this->character, note_anims[type & 0x3][0]);
 		
 		Stage_StartVocal();
 		this->arrow_hitan[type & 0x3] = stage.step_time;
@@ -538,7 +540,8 @@ static void Stage_SustainCheck(PlayerState *this, u8 type)
 static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 {
 	//Handle player note presses
-	#ifndef STAGE_PERFECT
+	if (!(stage.botplay))
+	{
 		if (playing)
 		{
 			
@@ -572,10 +575,10 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			this->pad_held = this->character->pad_held = 0;
 			this->pad_press = 0;
 		}
-	#endif
-	
-	#ifdef STAGE_PERFECT
+	}
 		//Do perfect note checks
+		if ((stage.botplay))
+		{
 		if (playing)
 		{
 			u8 i = (this->character == stage.opponent) ? NOTE_FLAG_OPPONENT : 0;
@@ -637,7 +640,7 @@ static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 			this->pad_held = this->character->pad_held = 0;
 			this->pad_press = 0;
 		}
-	#endif
+		}
 }
 
 //Stage drawing functions
@@ -849,7 +852,7 @@ static void Stage_DrawNotes(void)
 					//Missed note
 					Stage_CutVocal();
 					Stage_MissNote(this);
-					this->health -= 575;
+					this->health -= 975;
 					
 					//Send miss packet
 					#ifdef PSXF_NETWORK
@@ -1260,8 +1263,8 @@ static void Stage_LoadState(void)
 		stage.player_state[i].health = 20000;
 		stage.player_state[i].combo = 0;
 		stage.gameboy = 0;
-		swap = 0;
-		swapmiss = 2;
+		gamecooldown = 0;
+		gameone = 0;
 		
 		stage.player_state[i].refresh_score = false;
 		stage.player_state[i].score = 0;
@@ -1454,13 +1457,34 @@ void Stage_Tick(void)
 	#endif
 	{
 		//Return to menu when start is pressed
-		if (pad_state.press & PAD_START)
+       if (stage.state >= StageState_Dead)
+	   {
+		if (gameone == 1)
+		gamecooldown++;
+	   
+
+	   if  (pad_state.press & PAD_START)
+	   {   
+		   gameone = 1;
+		   stage.trans = (stage.state == StageState_Play) ? StageTrans_Menu : StageTrans_Reload;
+		   Audio_PlayXA_Track(XA_GameOver, 0x40, 1, false);
+		   stage.player->set_anim(stage.player, PlayerAnim_Dead6);
+	   }
+     
+		if (gamecooldown == 88)
+		{
+		gamecooldown = 0;
+		Trans_Start();
+		final = 0;
+		}
+	   }
+	           
+		else if (pad_state.press & PAD_START)
 		{
 			stage.trans = (stage.state == StageState_Play) ? StageTrans_Menu : StageTrans_Reload;
-			Trans_Start();
-			final = 0;
+             Trans_Start();
+		     final = 0;	
 		}
-		
 	}
 	
 	if (Trans_Tick())
@@ -1556,23 +1580,12 @@ void Stage_Tick(void)
 			else
 			  bfnotex = 0;
 
-			if (stage.gameboy == 1)
-			{	
-			  swap = 1;
-			  swapmiss = 3;
-			}
-			else
-			{
-			 swap = 0;
-			 swapmiss = 2;
-			}
-
 			switch(stage.song_step)
 			{
-			case 511:
+			case 512:
 			stage.gameboy = 1;
 			break;
-			case 574:
+			case 576:
 			stage.gameboy = 0;
 			break;
 			case 640:
@@ -1841,9 +1854,9 @@ void Stage_Tick(void)
 							Stage_StartVocal();
 		                
 							if (note->type & NOTE_FLAG_SUSTAIN)
-								opponent_snote = note_anims[note->type & 0x3][swap];
+								opponent_snote = note_anims[note->type & 0x3][0];
 							else
-								opponent_anote = note_anims[note->type & 0x3][swap];
+								opponent_anote = note_anims[note->type & 0x3][0];
 							note->type |= NOTE_FLAG_HIT;
 
 					
@@ -1967,6 +1980,16 @@ void Stage_Tick(void)
 					score_dst.x += FIXED_DEC(7,1);
 				}
 			}
+
+			if (stage.botplay)
+				{
+			//Draw botplay
+				RECT bot_fill = { 69,195, 96, 32};
+				RECT_FIXED bot_dst = {FIXED_DEC(-30,1), FIXED_DEC(-60,1), FIXED_DEC(96,1), FIXED_DEC(32,1)};
+				
+				bot_dst.w = bot_fill.w << FIXED_SHIFT;
+				Stage_DrawTex(&stage.tex_hud1, &bot_fill, &bot_dst, stage.bump);
+				}
 			
 			if (stage.mode < StageMode_2P)
 			{
@@ -1979,7 +2002,7 @@ void Stage_Tick(void)
 				}
 				if (stage.player_state[0].health > 20000)
 					stage.player_state[0].health = 20000;
-				
+			
 				//Draw health bar
 				RECT health_fill = {71,123, 72 - (72 * stage.player_state[0].health / 20000), 3};
 				RECT health_back = {71,118, 72, 3};
@@ -2119,21 +2142,11 @@ void Stage_Tick(void)
 			if (stage.player->animatable.anim == PlayerAnim_Dead3)
 			{
 				stage.state = StageState_DeadRetry;
-				Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
 			}
 			break;
 		}
 		case StageState_DeadRetry:
-		{
-			//Randomly twitch
-			if (stage.player->animatable.anim == PlayerAnim_Dead3)
-			{
-				if (RandomRange(0, 29) == 0)
-					stage.player->set_anim(stage.player, PlayerAnim_Dead4);
-				if (RandomRange(0, 29) == 0)
-					stage.player->set_anim(stage.player, PlayerAnim_Dead5);
-			}
-			
+		{		
 			//Scroll camera and tick player
 			Stage_ScrollCamera();
 			stage.player->tick(stage.player);
@@ -2216,14 +2229,31 @@ void Stage_NetHit(Packet *packet)
 			}
 		}
 	}
+	else if ((note->type & ( NOTE_FLAG_THUNDER)))
+	{
+		    //Hit the thunder
+			stage.fadethunder = FIXED_DEC(255,1);
+			stage.fadeextra = FIXED_DEC(0,1);
+			stage.fadespeed = FIXED_DEC(90,1);
+			stage.thunderbolt = 1;
+
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+
+			this->arrow_hitan[type & 0x3] = -1;
+	}
+
 	else
 	{
-		//Hit a mine
-		this->arrow_hitan[type & 0x3] = -1;
-		if (this->character->spec & CHAR_SPEC_MISSANIM)
-			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
-		else
-			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+	            //Hit the flame	   
+				stage.fadeflame = FIXED_DEC(255,1);
+		    	stage.fadeextra = FIXED_DEC(106,1);
+				stage.fadeextra2 = FIXED_DEC(0,1);
+			    stage.fadespeed = FIXED_DEC(90,1);
+			    stage.flame = 1;
+
+	       this->character->set_anim(this->character, note_anims[type & 0x3][0]);
+
+			this->arrow_hitan[type & 0x3] = -1;
 	}
 }
 

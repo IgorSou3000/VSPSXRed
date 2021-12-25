@@ -32,6 +32,7 @@ iso/bf/dead.arc: iso/bf/dead1.tim iso/bf/dead2.tim iso/bf/retry.tim
 # Red
 iso/red/main.arc: iso/red/idle0.tim iso/red/idle1.tim iso/red/left.tim iso/red/down.tim iso/red/up.tim iso/red/right.tim iso/red/idleb0.tim iso/red/idleb1.tim iso/red/leftb.tim iso/red/downb.tim iso/red/upb.tim iso/red/rightb.tim
 
+# Red and Charmander Title
 iso/menuchar/main.arc: iso/menuchar/idle0.tim iso/menuchar/idle1.tim iso/menuchar/char.tim
 
 # GF

@@ -16,10 +16,6 @@ typedef enum
 	PlayerAnim_DownMiss,
 	PlayerAnim_UpMiss,
 	PlayerAnim_RightMiss,
-    PlayerAnim_LeftMiss2,
-	PlayerAnim_DownMiss2,
-	PlayerAnim_UpMiss2,
-	PlayerAnim_RightMiss2,
 	
 	PlayerAnim_Peace,
 	PlayerAnim_Sweat,

@@ -401,7 +401,7 @@ void Menu_Tick(void)
 				if ((menu.page_state.title.logo_bump -= timer_dt) < 0)
 					menu.page_state.title.logo_bump = 0;
 
-			slide -= 3;
+			slide -= 5;
 
 			if (slide < 60)
 			    slide = 60;
@@ -829,7 +829,7 @@ void Menu_Tick(void)
 				u32 col;
 				const char *text;
 			} menu_options[] = {
-				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
+				{StageId_1_1, 0xFF9271FD, "POKEMON"},
 			};
 			
 			//Initialize page
@@ -944,14 +944,6 @@ void Menu_Tick(void)
 				menu.page_param.stage.diff = StageDiff_Normal;
 			}
 			
-			//Draw page label
-			menu.font_bold.draw(&menu.font_bold,
-				"MODS",
-				16,
-				SCREEN_HEIGHT - 32,
-				FontAlign_Left
-			);
-			
 			//Draw difficulty selector
 			if (menu_options[menu.select].difficulty)
 				Menu_DifficultySelector(SCREEN_WIDTH - 100, SCREEN_HEIGHT2 - 48);
@@ -1048,6 +1040,7 @@ void Menu_Tick(void)
 				//{OptType_Boolean, "INTERPOLATION", &stage.expsync},
 				{OptType_Boolean, "GHOST TAP ", &stage.ghost, {.spec_boolean = {0}}},
 				{OptType_Boolean, "DOWNSCROLL", &stage.downscroll, {.spec_boolean = {0}}},
+				{OptType_Boolean, "BOTPLAY", &stage.botplay, {.spec_boolean = {0}}},
 			};
 			
 			//Initialize page
@@ -1139,13 +1132,6 @@ void Menu_Tick(void)
 					FontAlign_Left
 				);
 			}
-			
-			//Draw background
-			Menu_DrawBack(
-				menu.next_page == menu.page || menu.next_page == MenuPage_Title,
-				253 >> 1, 253 >> 1, 253 >> 1,
-				253 >> 1, 253 >> 1, 253 >> 1
-			);
 
 			break;
 		}
@@ -1154,18 +1140,18 @@ void Menu_Tick(void)
 			cre--;
 			Gfx_SetClear(255,255,255);
             
-
+             //Draw Character 
 			if (stage.song_step >= 134 && stage.song_step <= 170) 
 			{
 			   menu.redm->tick(menu.redm);
 			   menu.charm->tick(menu.charm);
 			}
 
+             //Draw Logo
 			if (stage.song_step >= 140 && stage.song_step <= 170) 
-			{
 			   DrawLogo();		   
-			}
-
+             
+			 //Finished credits
 			if (stage.song_step >= 195  || ((pad_state.press & PAD_START)))
 			{
 					menu.next_page = MenuPage_Main;
@@ -1173,10 +1159,17 @@ void Menu_Tick(void)
 					Trans_Start();
 					cre = +700 ;	
 			}
-				   
-	           //Draw different text depending on beat
-				RECT src_cre = {0, 0, 256, 256};
 
+			//Draw page label
+			menu.font_bold.draw(&menu.font_bold,
+				"CREDITS",
+				0,
+				SCREEN_HEIGHT - 230,
+				FontAlign_Left
+			);
+				   
+				//Draw Credits
+				RECT src_cre = {0, 0, 256, 256};
 				Gfx_BlitTex(&menu.tex_cre0, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 - 16 + cre);
 				Gfx_BlitTex(&menu.tex_cre1, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 240 + cre);
 				Gfx_BlitTex(&menu.tex_cre2, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 + 496 + cre);
@@ -1184,13 +1177,6 @@ void Menu_Tick(void)
 
                 if (stage.song_step >= 172) 
 				Gfx_BlitTex(&menu.tex_cre4, &src_cre, (SCREEN_WIDTH - 256) >> 1, SCREEN_HEIGHT2 - 120);
-
-				if (pad_state.held & PAD_DOWN)
-				   cre--;
-
-				if (pad_state.held & PAD_START)
-					menu.page = menu.next_page = MenuPage_Main;
-
 				break;
 		}
 
@@ -1483,14 +1469,14 @@ void Menu_Tick(void)
 				const char *text;
 			} menu_options[] = {
 				//{StageId_4_4, "TEST"},
-				{false,  StageId_1_1, "BOPEEBO"},
+				{false,  StageId_1_1, "POKEMON"},
 			};
 			
 			//Initialize page
 			if (menu.page_swap)
 			{
 				menu.scroll = COUNT_OF(menu_options) * FIXED_DEC(24 + SCREEN_HEIGHT2,1);
-				menu.page_param.stage.diff = StageDiff_Normal;
+				menu.page_param.stage.diff = StageDiff_Hard;
 				menu.page_state.net_op.swap = false;
 			}
 			
